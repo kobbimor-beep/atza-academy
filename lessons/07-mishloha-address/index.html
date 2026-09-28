@@ -492,8 +492,6 @@ footer {
   background: var(--bg, #f4f6f9); align-items: stretch; }
 .sim-grid.unstick { position: static; }
 .sim-grid .chat-panel, .sim-grid .mock-panel { display: flex; flex-direction: column; }
-.chat-body { height: clamp(190px, 36vh, 340px); }
-.mock-body { height: clamp(190px, 36vh, 340px); overflow-y: auto; box-sizing: border-box; }
 #activeSlot .station { scroll-margin-top: 0; }
 /* quiz: chat + screen not needed — shrink the stage to its headers so the question sits high */
 .sim-grid.quiz-mode .chat-body, .sim-grid.quiz-mode .mock-body { height: 0 !important; min-height: 0 !important; padding: 0 !important; overflow: hidden; }
@@ -501,9 +499,83 @@ footer {
 @media (max-width: 900px) {
   .sim-grid { gap: .45rem; padding: .3rem 0 .35rem; }
   .chat-head, .mock-head { padding: .35rem .75rem; font-size: .86rem; }
-  .chat-body { height: 20vh; min-height: 115px; padding: .5rem; }
-  .mock-body { height: 24vh; min-height: 135px; padding: .5rem .7rem .7rem; }
   .bubble { font-size: .88rem; padding: .4rem .6rem; }
+}
+
+/* ===== Fix 2: no inner scroll — compact auto-height mock + hidden-overflow chat ===== */
+.chat-body { flex: 1 1 0; min-height: 210px; height: auto; overflow: hidden !important; scrollbar-width: none; }
+.chat-body::-webkit-scrollbar { display: none; }
+.mock-body { height: auto; overflow: visible; padding: .5rem .7rem .6rem; }
+.mock-head, .chat-head { padding: .4rem .85rem; font-size: .9rem; }
+.mh-card { padding: .45rem .7rem; border-radius: 10px; }
+.mh-h { margin: 0 0 .3rem; font-size: .92rem; }
+.mh-lab { margin: 0; font-size: .8rem; white-space: nowrap; }
+.mh-inp { padding: .22rem .1rem; font-size: .92rem; }
+.mock-body .mh-btn { margin-top: .35rem !important; padding: .36rem .7rem; font-size: .88rem; border-radius: 8px; }
+.mock-body .mh-types { margin: .4rem 0 !important; }
+.mh-type { padding: .32rem .3rem; font-size: .88rem; }
+.mh-sum { display: none; width: 100%; text-align: right; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px;
+  padding: .28rem .6rem; font: inherit; font-size: .84rem; color: #334155; cursor: pointer; }
+[hidden] { display: none !important; }
+.mh-sec.folded { padding: 0 !important; border: 0 !important; background: transparent !important; display: block !important; margin-top: .35rem !important; }
+.mh-sec.folded > *:not(.mh-sum) { display: none !important; }
+.mh-sec.folded > .mh-sum { display: block; }
+/* lesson 6: customer card on two lines */
+#mPhoneCard:not(.folded):not([hidden]) { display: grid; grid-template-columns: auto 1fr auto; gap: .2rem .5rem; align-items: end; }
+#mPhoneCard > .mh-h, #mPhoneCard > #mNameCard { grid-column: 1 / -1; }
+#mPhoneCard .mh-btn { width: auto; margin-top: 0 !important; white-space: nowrap; }
+#mNameCard { display: grid; grid-template-columns: auto 1fr auto 1fr auto; gap: .2rem .5rem; align-items: end; }
+#mBranchWrap .mh-search { margin: .15rem 0 .3rem; padding: .28rem .6rem !important; }
+.mh-branches { display: grid; grid-template-columns: 1fr 1fr; gap: .3rem; max-height: none; overflow: visible; }
+.mh-branch { padding: .22rem .45rem; gap: .4rem; }
+.mh-logo { width: 26px; height: 26px; font-size: .6rem; }
+.mh-btxt { font-size: .8rem; line-height: 1.25; }
+.mh-btxt small { font-size: .7rem; }
+/* lesson 7: one-line customer strip, 2-column address grid, inline hub, 5-col fees */
+.mock-body > .mh-card:first-child:not(#mPhoneCard) { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem 1rem; padding: .3rem .7rem; }
+.mock-body > .mh-card:first-child:not(#mPhoneCard) .mh-h { margin: 0; }
+.mock-body > .mh-card:first-child:not(#mPhoneCard) .mh-readonly { border: 0; padding: 0; gap: .35rem; font-size: .86rem; }
+#addrCard:not(.folded):not([hidden]) { display: grid; grid-template-columns: 1fr 1fr; gap: .05rem .8rem; align-items: center; }
+#addrCard > .mh-addr-head, #addrCard > .mh-msg { grid-column: 1 / -1; }
+#addrCard .mh-addr-head { margin-bottom: .1rem; }
+#addrCard .mh-row2 { display: contents; }
+#addrCard .mh-row { padding: 0; }
+#addrCard .mh-row label { min-width: 0; font-size: .82rem; }
+#addrCard .mh-chk { margin: .3rem 0 0; font-size: .82rem; }
+#addrCard #addrGo { margin-top: .3rem !important; }
+.mh-saved-btn { padding: .18rem .55rem; font-size: .82rem; }
+#hubWrap:not(.folded):not([hidden]) { display: grid; grid-template-columns: 1fr auto; gap: .25rem .5rem; align-items: center; padding: .45rem .6rem; margin-top: .4rem; }
+#hubWrap > h4, #hubWrap > #hubOut, #hubWrap > p { grid-column: 1 / -1; margin: 0 !important; font-size: .88rem; }
+#hubWrap > p { font-size: .76rem !important; }
+#hubWrap .mh-search { margin: 0; padding: .28rem .6rem !important; }
+#hubWrap #hubGo { margin-top: 0 !important; }
+.hub-result { margin-top: .2rem; padding: .35rem .6rem; font-size: .86rem; }
+.mh-fee { padding: .45rem .6rem; margin-top: .4rem !important; }
+.mh-fee-head { padding: .3rem .6rem; font-size: .88rem; }
+.mh-fee-grid { grid-template-columns: repeat(5, 1fr); gap: .25rem; margin: .35rem 0; }
+.mh-fee-btn { padding: .18rem .3rem; font-size: .72rem; }
+@media (max-width: 900px) {
+  .chat-body { flex: none; height: 17vh; min-height: 105px; padding: .45rem; }
+  .mh-fee-grid { grid-template-columns: repeat(3, 1fr); }
+  #addrCard:not(.folded) { gap: 0 .5rem; }
+  #addrCard .mh-row label { font-size: .76rem; }
+  .mock-body > .mh-card:first-child:not(#mPhoneCard) { gap: 0 .7rem; }
+  .mock-body > .mh-card:first-child:not(#mPhoneCard) .mh-h { font-size: .84rem; }
+}
+@media (max-width: 900px) {
+  /* mobile: reply turns show the chat, typing turns show the relevant screen section + last bubble */
+  .sim-grid.m-say .mock-body { display: none; }
+  .sim-grid.m-fill .chat-body { height: 96px; min-height: 0; }
+  .sim-grid.m-fill .mock-body > .mh-card:first-child:not(#mPhoneCard) { display: none !important; }
+  .sim-grid.m-hide-types #mTypes { display: none !important; }
+  .mh-fee-grid { grid-template-columns: repeat(5, 1fr) !important; }
+  .mh-fee-btn { justify-content: center; }
+  .mh-fee-btn span { display: none; }
+}
+@media (max-width: 560px) {
+  #mNameCard { grid-template-columns: auto 1fr; }
+  #mNameCard .mh-btn { grid-column: 1 / -1; }
+  .mh-branch small { display: none; }
 }
 </style>
 </head>
@@ -542,13 +614,13 @@ footer {
   <div class="mh-readonly"><span>טלפון</span><b dir="ltr">052·······</b></div>
   <div class="mh-readonly"><span>שם</span><b>לקוח/ה בשיחה</b></div>
 </div>
-<div class="mh-types" id="mTypes" style="margin-top:.7rem">
+<div class="mh-types" id="mTypes">
   <button type="button" class="mh-type" data-t="delivery">משלוח</button>
   <button type="button" class="mh-type" data-t="pickup">איסוף עצמי</button>
   <button type="button" class="mh-type" data-t="dine">ישיבה במקום</button>
 </div>
 <div id="addrWrap" hidden>
-  <div class="mh-card" id="addrCard" style="margin-top:.55rem">
+  <div class="mh-card mh-sec" id="addrCard" data-sec="addr" style="margin-top:.4rem"><button type="button" class="mh-sum"></button>
     <div class="mh-addr-head"><h3 class="mh-h" style="margin:0">כתובתי למשלוח</h3>
       <button type="button" class="mh-saved-btn" id="savedBtn">כתובות שמורות ▾</button></div>
     <div class="mh-row"><label>עיר:</label><input class="mh-inp" data-f="city" type="text" autocomplete="off"></div>
@@ -568,14 +640,14 @@ footer {
   <h3 class="mh-h">📍 בחר כתובת</h3>
   <div id="savedList" class="mh-saved-list"></div>
 </div></div>
-<div class="hub-sim" id="hubWrap" hidden>
+<div class="hub-sim mh-sec" id="hubWrap" data-sec="hub" hidden><button type="button" class="mh-sum"></button>
   <h4>Agent Hub · בדיקת כיסוי (סימולטור)</h4>
   <input class="mh-inp mh-search" id="hubQ" type="search" placeholder="חפש יישוב / אזור…" autocomplete="off">
   <button type="button" class="mh-btn" id="hubGo" style="margin-top:.4rem">בדיקה</button>
   <div id="hubOut"></div>
   <p style="font-size:.8rem;color:#64748b;margin:.4rem 0 0">במשמרת: <a href="https://address.kobimor.com/" target="_blank" rel="noopener">address.kobimor.com</a></p>
 </div>
-<div class="mh-fee" id="feeWrap" hidden style="margin-top:.55rem">
+<div class="mh-fee mh-sec" id="feeWrap" data-sec="fee" hidden><button type="button" class="mh-sum"></button>
   <div class="mh-fee-head"><div><strong>הוספת דמי משלוח</strong><div id="feeSum">0 ₪</div></div><div class="mh-fee-logo">אצה</div></div>
   <div class="mh-fee-grid" id="feeGrid"></div>
   <button type="button" class="mh-btn" id="feeAdd">הוספה להזמנה</button>
@@ -1143,6 +1215,38 @@ function mockScrollTo(el) {
   const br = body.getBoundingClientRect(), er = el.getBoundingClientRect();
   if (er.top < br.top || er.bottom > br.bottom) body.scrollTop += (er.top - br.top) - 8;
 }
+
+/* Fix 2: fold non-focused mock sections into a one-line summary (no inner scroll) */
+const FOLD_MAP = { addr: 'addr', saved: 'addr', hub: 'hub', fee: 'fee', types: '_' };
+const FOLD_SUM = {
+  addr: () => { const s = MOCK.state; const parts = [s.city, [s.street, s.no].filter(Boolean).join(' ')].filter(Boolean);
+    return '▸ כתובת למשלוח: ' + (parts.length ? parts.join(', ') + (s.apt ? ' · דירה ' + s.apt : '') + (s.floor ? ' · קומה ' + s.floor : '') : 'לחצו לפתיחה'); },
+  hub: () => { const t = (document.getElementById('hubOut').textContent || '').replace(/\s+/g, ' ').trim(); return '▸ Agent Hub: ' + (t || 'לחצו לפתיחה'); },
+  fee: () => '▸ דמי משלוח: ' + (MOCK.state.fee ? '₪' + MOCK.state.fee : '—')
+};
+
+let foldSi = 'init';
+function foldSections(focus) {
+  const secs = [...document.querySelectorAll('.mh-sec')];
+  const a = ALL[current - 1]; const si = a ? a.si : undefined;
+  if (si !== foldSi) { foldSi = si; secs.forEach(s => s.classList.remove('folded')); const hq = document.getElementById('hubQ'); if (hq) hq.value = ''; }
+  let target = focus ? (FOLD_MAP[focus] || '_') : null;
+  /* mobile: on reply-only turns the screen folds to summaries so chat + question fit */
+  if (!target && a && a.kind === 'turn' && window.matchMedia('(max-width: 900px)').matches) target = '_';
+  if (target) secs.forEach(s => s.classList.toggle('folded', s.dataset.sec !== target));
+  const sg = document.querySelector('.sim-grid');
+  if (sg) {
+    const isTurn = !!(a && a.kind === 'turn');
+    sg.classList.toggle('m-say', isTurn && a.t.type === 'say');
+    sg.classList.toggle('m-fill', isTurn && a.t.type !== 'say');
+    sg.classList.toggle('m-hide-types', isTurn && !!a.t.focus && !['types', 'branches'].includes(a.t.focus));
+  }
+  secs.forEach(s => { const sum = s.querySelector(':scope > .mh-sum'); if (sum && FOLD_SUM[s.dataset.sec]) sum.textContent = FOLD_SUM[s.dataset.sec](); });
+}
+document.addEventListener('click', e => { const b = e.target.closest('.mh-sum'); if (b) b.parentElement.classList.remove('folded'); });
+(function () { const hl = MOCK.highlight; MOCK.highlight = f => { hl(f); foldSections(f); }; })();
+(function () { const cb = document.getElementById('chatBody');
+  if (cb && window.ResizeObserver) new ResizeObserver(() => { cb.scrollTop = cb.scrollHeight; }).observe(cb); })();
 function activateTurn(n) {
   const a = ALL[n - 1];
   document.getElementById('scenarioTag').textContent = a.kind === 'quiz'

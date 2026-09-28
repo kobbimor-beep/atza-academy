@@ -479,6 +479,32 @@ footer {
 .turn-hint { color:var(--muted); font-size:.92rem; margin:0 0 .5rem; }
 .chat-panel.quiz-mode, .mock-panel.quiz-mode { opacity:.55; }
 .station .opt-col { margin-top:.2rem; }
+
+/* ===== Fix 1: Times-style sticky stage (chat + mock at top, current turn right below) ===== */
+.done-fold { margin: .2rem 0 .6rem; }
+.done-fold > summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: .45rem;
+  background: var(--ok-bg, #ecfdf5); color: var(--ok, #0f766e); border: 1px solid #99f6e4; border-radius: 999px;
+  padding: .3rem .85rem; font-size: .86rem; font-weight: 700; }
+.done-fold > summary::-webkit-details-marker { display: none; }
+.done-fold[open] > summary { margin-bottom: .45rem; }
+.done-fold .station { margin-bottom: .35rem; }
+.sim-grid { position: sticky; top: 0; z-index: 20; margin: .4rem 0 .7rem; padding: .45rem 0 .5rem;
+  background: var(--bg, #f4f6f9); align-items: stretch; }
+.sim-grid.unstick { position: static; }
+.sim-grid .chat-panel, .sim-grid .mock-panel { display: flex; flex-direction: column; }
+.chat-body { height: clamp(190px, 36vh, 340px); }
+.mock-body { height: clamp(190px, 36vh, 340px); overflow-y: auto; box-sizing: border-box; }
+#activeSlot .station { scroll-margin-top: 0; }
+/* quiz: chat + screen not needed — shrink the stage to its headers so the question sits high */
+.sim-grid.quiz-mode .chat-body, .sim-grid.quiz-mode .mock-body { height: 0 !important; min-height: 0 !important; padding: 0 !important; overflow: hidden; }
+.wrap > footer { margin-bottom: 40vh; }
+@media (max-width: 900px) {
+  .sim-grid { gap: .45rem; padding: .3rem 0 .35rem; }
+  .chat-head, .mock-head { padding: .35rem .75rem; font-size: .86rem; }
+  .chat-body { height: 20vh; min-height: 115px; padding: .5rem; }
+  .mock-body { height: 24vh; min-height: 135px; padding: .5rem .7rem .7rem; }
+  .bubble { font-size: .88rem; padding: .4rem .6rem; }
+}
 </style>
 </head>
 <body>
@@ -506,6 +532,7 @@ footer {
 <section class="card video-slot"><h2>סרטון הדרכה</h2>
 <div class="player-frame"><div class="play-circle"></div><div>כאן יופיע סרטון ההדרכה (~3–4 דק׳)</div><div class="hint">Loom / OBS — יוטמע בהמשך</div></div></section>
 <nav class="progress-bar" id="progressBar" aria-label="התקדמות"></nav>
+<div class="completed-rail" id="completedRail"></div>
 <div class="sim-grid">
   <div class="mock-panel" id="mockPanel">
     <div class="mock-head"><span>מסך הזמנות משלוחה (סימולטור)</span></div>
@@ -560,7 +587,6 @@ footer {
     <div class="chat-body" id="chatBody"></div>
   </div>
 </div>
-<div class="completed-rail" id="completedRail"></div>
 <div id="activeSlot"></div>
 <div class="locked-rail" id="lockedRail"></div>
 <div id="stationHolding" hidden></div>
@@ -703,7 +729,7 @@ const MOCK = (() => {
     document.querySelectorAll('.hl').forEach(el => el.classList.remove('hl'));
     const map = { types: 'mTypes', addr: 'addrCard', saved: 'savedBtn', hub: 'hubWrap', fee: 'feeWrap' };
     const el = document.getElementById(map[focus] || focus);
-    if (el) { el.hidden = false; el.classList.add('hl'); }
+    if (el) { el.hidden = false; el.classList.add('hl');  requestAnimationFrame(() => mockScrollTo(el)); }
   }
   return { init, reset, paint, highlight, get state() { return state; }, set(k, v) { state[k] = v; paint(); } };
 })();
@@ -1043,9 +1069,10 @@ function placeStations() {
     else { el.classList.add('station-teaser', 'locked-station'); lockedEls.push(el); }
   }
   if (done.length) {
-    const lab = document.createElement('p'); lab.className = 'rail-label';
-    lab.textContent = 'הושלמו (' + done.length + '/' + TOTAL + ')';
-    completed.appendChild(lab); done.forEach(el => completed.appendChild(el));
+    let fold = completed.querySelector('details.done-fold');
+    if (!fold) { fold = document.createElement('details'); fold.className = 'done-fold'; fold.innerHTML = '<summary></summary>'; completed.appendChild(fold); }
+    fold.querySelector('summary').textContent = '✓ הושלמו (' + done.length + '/' + TOTAL + ') · לחצו לצפייה';
+    done.forEach(el => fold.appendChild(el));
   }
   if (lockedEls.length) {
     const lab = document.createElement('p'); lab.className = 'rail-label';
@@ -1090,8 +1117,7 @@ function stationPass(n, answerText) {
     if (current <= TOTAL) {
       AG.activate(current);
       activateTurn(current);
-      const el = document.getElementById('station' + current);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      alignActive();
     }
     if (passed.slice(1).every(Boolean)) onComplete();
   }, SUCCESS_MS);
@@ -1102,6 +1128,21 @@ function stationWrong(n, tip) {
   showFb(n, false, '<span class="tip-label">✗ לא נכון. טיפ:</span> ' + esc(tip) + '<br><span class="try-again">נסה שוב</span>');
 }
 
+
+/* Fix 1: keep the current turn directly under the sticky stage; scroll the mock (not the page) to the focus */
+function alignActive() {
+  const stage = document.querySelector('.sim-grid');
+  const slot = document.getElementById('activeSlot');
+  if (!stage || !slot || stage.classList.contains('unstick')) return;
+  const y = slot.getBoundingClientRect().top + window.scrollY - stage.offsetHeight - 6;
+  window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+}
+function mockScrollTo(el) {
+  const body = document.querySelector('.mock-body');
+  if (!body || !el || !body.contains(el)) return;
+  const br = body.getBoundingClientRect(), er = el.getBoundingClientRect();
+  if (er.top < br.top || er.bottom > br.bottom) body.scrollTop += (er.top - br.top) - 8;
+}
 function activateTurn(n) {
   const a = ALL[n - 1];
   document.getElementById('scenarioTag').textContent = a.kind === 'quiz'
@@ -1110,10 +1151,12 @@ function activateTurn(n) {
   if (a.kind === 'quiz') {
     document.getElementById('chatPanel').classList.add('quiz-mode');
     document.getElementById('mockPanel').classList.add('quiz-mode');
+    document.querySelector('.sim-grid').classList.add('quiz-mode');
     return;
   }
   document.getElementById('chatPanel').classList.remove('quiz-mode');
   document.getElementById('mockPanel').classList.remove('quiz-mode');
+  document.querySelector('.sim-grid').classList.remove('quiz-mode');
   const { sc, ti, t } = a;
   if (ti === 0) {
     clearChat();
@@ -1128,7 +1171,7 @@ function activateTurn(n) {
     opts.innerHTML = t.options.map((o, k) =>
       `<button type="button" class="opt-btn" data-s="${n}" data-o="${k}"><span class="opt-mark"></span><span>${esc(o.t)}</span></button>`).join('');
   } else if (t.type === 'fill') {
-    hint.innerHTML = t.hint || 'הזינו / לחצו במסך ההזמנות משמאל (למעלה במובייל).';
+    hint.innerHTML = t.hint || 'הזינו / לחצו במסך ההזמנות למעלה.';
     opts.innerHTML = '';
     if (t.prep) t.prep(n);
   } else if (t.type === 'hub') {
@@ -1188,6 +1231,7 @@ function onComplete() {
   const banner = document.getElementById('completeBanner');
   banner.classList.add('show');
   AG.complete(document.getElementById('flagSummary'));
+  const stg = document.querySelector('.sim-grid'); if (stg) stg.classList.add('unstick');
   banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
   const btn = document.getElementById('nextLessonBtn');
   const note = document.getElementById('nextLessonNote');

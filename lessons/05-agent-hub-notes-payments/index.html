@@ -473,6 +473,75 @@ footer {
   font-family: "Heebo", sans-serif; direction: rtl; text-align: right;
 }
 .station .sim-stage { margin-top:.4rem }
+.sheet-toolbar {
+  display: flex; flex-wrap: wrap; gap: .6rem; align-items: center;
+  margin-bottom: .65rem;
+}
+.sheet-toolbar label { font-weight: 600; font-size: .9rem; color: var(--muted); }
+.sheet-search {
+  flex: 1 1 220px; min-width: 160px;
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: .5rem .75rem; font-size: .95rem;
+}
+.sheet-meta {
+  font-size: .82rem; color: var(--muted); margin-bottom: .5rem;
+}
+.sheet-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  max-height: none;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  background: #fff;
+  direction: rtl;
+}
+.fake-sheet {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .84rem;
+  min-width: 560px;
+}
+.fake-sheet thead th {
+  position: static;
+  background: #f1f3f4;
+  border-bottom: 2px solid #dadce0;
+  border-left: 1px solid #e8eaed;
+  padding: .55rem .5rem;
+  font-weight: 700;
+  color: #202124;
+  text-align: right;
+  white-space: nowrap;
+}
+.fake-sheet tbody td {
+  border-bottom: 1px solid #e8eaed;
+  border-left: 1px solid #f1f3f4;
+  padding: .45rem .5rem;
+  vertical-align: top;
+}
+.fake-sheet tbody tr:nth-child(even) td { background: #fafbfc; }
+.fake-sheet tbody tr:hover td { background: #e8f0fe; }
+.fake-sheet .col-branch { font-weight: 700; color: var(--accent); white-space: nowrap; }
+.cell-closed {
+  background: #fce8e6 !important;
+  color: var(--bad);
+  font-weight: 800;
+  text-align: center;
+}
+.cell-phone {
+  font-family: ui-monospace, Consolas, monospace;
+  color: #1967d2;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+.cell-phone:hover { background: #d2e3fc !important; }
+.cell-phone.copied {
+  outline: 2px solid #1967d2;
+  outline-offset: -1px;
+  background: #d2e3fc !important;
+}
+.times-mini { margin:.2rem 0 .8rem }
 </style>
 </head>
 <body>
@@ -553,17 +622,6 @@ footer {
     </div>
   </div>
 
-  \g<1>
-      <p><strong>פתיחה:</strong> חלק 3 בתיק הנציג — סעיף 3 «הערות נוספות» וסעיף 5 «תשלומים» בפאנל «מידע על הסניף» (address.kobimor.com). קופונים (סעיף 4) — נלמדו קודם, לא כאן.</p>
-      <p><strong>כלל הערות נוספות:</strong> לקוח שואל → קודם בודקים בתיק. אין תשובה → (1) מנהל משמרת, או (2) Hold → חיוג לסניף → תשובה → חזרה ללקוח. לא מנחשים ולא עונים «אין לי מידע».</p>
-      <p><strong>1 · חדרה — טיפ לשליח:</strong> לא לקחת באשראי.</p>
-      <p><strong>2 · חולון — חניה ליד הסניף:</strong> לא מופיע בתיק → «אין תשובה בתיק — להפנות למנהל משמרת, או לשים בהמתנה, להתקשר לסניף ולחזור ללקוח».</p>
-      <p><strong>3 · חיוג (סופטפון, כמו שיעור 1):</strong> Hold → הקלדת 03-9526710 (חולון, מ«פרטי סניף») → Call → הסניף עונה בלוג (תשובה מדומה לתרגול, לא מידע אמיתי) → End Call (מנתק את הסניף) → Last Call (חזרה ללקוח). פעולה שגויה נספרת: Call/Transfer בלי Hold, מספר שגוי, End Call על הלקוח, Last Call מוקדם, סגירת החלון / Close All. ללא כניסה וללא סיסמאות.</p>
-      <p><strong>4 · סמלים בתשלומים:</strong> ✓ ירוק = מתקבל · ✕ אפור = לא מתקבל · ! צהוב = בתנאי. ריחוף עם העכבר מציג את ההנחיה המדויקת (יש הנחיות גם על חלק מה־✓).</p>
-      <p><strong>5 · פ״ת נופשונית (!):</strong> לרשום מספר כרטיס בהערות + לציין תשלום בנופשונית, לשלוח כמזומן.</p>
-      <p><strong>דגלי ניחוש:</strong> עד 2 טעויות בתחנה = טיפ + «נסה שוב». בטעות ה־3 — דגל «ניחוש», אזהרה כתומה («נראה שמנחשים — חזרו לתיק הנציג ב־Agent Hub ובדקו…») ונעילה ל־15 שנ׳ עם ספירה לאחור. תשובה ראשונה פחות מ־4 שנ׳ אחרי שהשאלה נפתחה — דגל «מהיר מדי» (נבדקת כרגיל; לא בתחנת החיוג). בסיום: «דגלים: X». יומן ב־localStorage: atzaAcademy.lesson05-agent-hub-3.log. ספים: MAX_WRONG=3, LOCK_SEC=15, FAST_SEC=4.</p>
-    \g<2>
-
   <footer>אקדמיית אצה · תיק נציג · Agent Hub חלק 3 · הערות נוספות ותשלומים</footer>
 </div>
 
@@ -587,7 +645,9 @@ const WARN_LEAD = 'חזרו לתיק הנציג ב־Agent Hub ובדקו';
 const FAST_TEXT = 'ענית מהר מאוד — ודא שבדקת בתיק.';
 const HUB_BTN = '<a class="hub-cta" href="https://address.kobimor.com/" target="_blank" rel="noopener" style="margin-top:.5rem;font-size:.95rem;padding:.6rem 1.05rem">פתח Agent Hub האמיתי ↗</a>';
 const NO_ANSWER = 'אין תשובה בתיק — להפנות למנהל משמרת, או לשים בהמתנה, להתקשר לסניף ולחזור ללקוח';
-const BRANCH_DIGITS = '039526710';   // חולון — «פרטי סניף» → טלפון (live Hub)
+const BRANCH_DIGITS = '039526710';   // חולון — מסמך זמנים («זמנים גדול» → טלפון; = «ישיר סניף» בלשונית «טלפונים סניפים»)
+// Times-document rows (same practice sheet as lesson 2, real phone column)
+const TIMES_ROWS = [{"name": "אצה בית שאן", "deliv": 75, "ta": 30, "phone": "048690333", "addr": "העמל 7, מתחם צים, בית שאן", "delivOpen": false, "taOpen": true}, {"name": "אצה בית שמש", "deliv": 50, "ta": 15, "phone": "0528350988", "addr": "יגאל אלון 1, מרכז ביג", "delivOpen": true, "taOpen": true}, {"name": "אצה חולון", "deliv": 60, "ta": 20, "phone": "039526710", "addr": "פנחס איילון 13, מרכז מסחרי 300", "delivOpen": true, "taOpen": true}, {"name": "אצה חיפה", "deliv": 60, "ta": 60, "phone": "046720952", "addr": "שדרות הנשיא 129 חיפה", "delivOpen": true, "taOpen": true}, {"name": "אצה עפולה", "deliv": 75, "ta": 40, "phone": "047799090", "addr": "יהושע חנקין 14, מתחם רמי לוי", "delivOpen": true, "taOpen": true}, {"name": "אצה קרית אתא", "deliv": 70, "ta": 60, "phone": "0779386160", "addr": "מרכז מסחרי גבעת אלונים", "delivOpen": true, "taOpen": true}, {"name": "אצה צור הדסה", "deliv": 60, "ta": 30, "phone": "025096540", "addr": "הדרור 2, צור הדסה", "delivOpen": true, "taOpen": true}, {"name": "אצה רמת ישי", "deliv": 90, "ta": 50, "phone": "046435022", "addr": "אזור תעשייה רמת ישי", "delivOpen": true, "taOpen": false}, {"name": "הקציצה", "deliv": 45, "ta": 25, "phone": "0546881085", "addr": "מעונה", "delivOpen": true, "taOpen": true}, {"name": "אצה אשדוד", "deliv": 90, "ta": 45, "phone": "086587911", "addr": "הגדוד העברי 1, אשדוד", "delivOpen": true, "taOpen": true}, {"name": "אצה חדרה", "deliv": 60, "ta": 20, "phone": "049888694", "addr": "צה\"ל 35, מיקס סנטר חדרה", "delivOpen": true, "taOpen": true}, {"name": "אצה תל אביב", "deliv": 60, "ta": 30, "phone": "037303022", "addr": "בן יהודה 128, תל אביב", "delivOpen": true, "taOpen": true}];
 
 const STATIONS = [
   { label: 'טיפ · חדרה', title: 'הערות נוספות · חדרה',
@@ -613,9 +673,16 @@ const STATIONS = [
       { t: NO_ANSWER, ok: true } ] },
 
   { label: 'חיוג לסניף', title: 'המתנה, חיוג לסניף וחזרה ללקוח · חולון', type: 'custom', noFast: true,
-    check: 'את מספר הטלפון ב«פרטי סניף» של חולון, וקראו שוב את הרצף Hold → Call → End Call → Last Call',
-    html: `<p class="station-q">ממשיכים עם הלקוח מחולון: התשובה לא בתיק, ובחרתם להתקשר לסניף. שימו את הלקוח בהמתנה, חייגו לסניף חולון (המספר — בסעיף 1 «פרטי סניף» ב־Agent Hub), קבלו תשובה, נתקו את הסניף וחזרו ללקוח.</p>
-      <p style="color:var(--muted);font-size:.9rem;margin:.2rem 0 .6rem">הסופטפון כבר מחובר ובשיחה עם הלקוח — אין צורך בכניסה. הרצף, כמו בשיעור 1: <b>Hold</b> ← הקלדת מספר הסניף ← <b>Call</b> ← <b>End Call</b> (ניתוק הסניף) ← <b>Last Call</b> (חזרה ללקוח).</p>
+    check: 'את עמודת «טלפון» בשורה של «אצה חולון» במסמך הזמנים, וקראו שוב את הרצף Hold → Call → End Call → Last Call',
+    warn: 'חזרו למסמך הזמנים ובדקו את עמודת «טלפון» בשורה של «אצה חולון», וקראו שוב את הרצף Hold → Call → End Call → Last Call (כמו בשיעור 1) לפני שממשיכים',
+    html: `<p class="station-q">ממשיכים עם הלקוח מחולון: התשובה לא בתיק, ובחרתם להתקשר לסניף. שימו את הלקוח בהמתנה, חייגו לסניף חולון, קבלו תשובה, נתקו את הסניף וחזרו ללקוח.</p>
+      <div class="station-tip" role="note">🔁 <strong>זו אותה פעולה בסופטפון שלמדתם בשיעור 1 (טלפוניה):</strong> <b>Hold</b> ← חיוג לסניף (<b>Call</b>) ← <b>End Call</b> לניתוק הסניף ← חזרה ללקוח עם <b>Last Call</b>.</div>
+      <p style="color:var(--muted);font-size:.9rem;margin:.5rem 0 .4rem">📄 את מספר הסניף לוקחים מ<strong>מסמך זמנים</strong> (כמו בשיעור 2) — עמודת «טלפון». הסופטפון כבר מחובר ובשיחה עם הלקוח — אין צורך בכניסה.</p>
+      <div class="times-mini">
+        <div class="sheet-toolbar"><label for="tmSearch">📄 מסמך זמנים — חיפוש סניף</label><input type="search" id="tmSearch" class="sheet-search" placeholder="הקלידו שם סניף…" autocomplete="off"></div>
+        <div class="sheet-wrap"><table class="fake-sheet"><thead><tr><th>סניף</th><th>משלוח</th><th>TA</th><th>טלפון</th><th>כתובת</th></tr></thead><tbody id="tmBody"></tbody></table></div>
+        <p class="sheet-meta" style="margin-top:.35rem">תצוגת תרגול של מסמך הזמנים · לחיצה על מספר טלפון מעתיקה אותו · <span id="tmCopied"></span></p>
+      </div>
       <div class="sim-stage ag-zone" style="display:flex;justify-content:center">
         <div class="call-mgmt show" id="callMgmt">
           <div class="cm-title"><div class="sp-icon">t</div><div class="t">0538223574 לקוח · חולון</div>
@@ -642,6 +709,16 @@ const STATIONS = [
       const ok = () => !(passed[n] || current !== n || AG.isLocked(n));
       const bad = tip => { AG.attempt(n, { noFast: true }); stationWrong(n, tip); };
       const note = html => { const fb = $('fb' + n); fb.className = 'feedback'; fb.innerHTML = html; };
+      const esc2 = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const renderTimes = q => { q = (q || '').trim();
+        $('tmBody').innerHTML = TIMES_ROWS.filter(r => !q || (r.name + ' ' + r.addr).includes(q)).map(r =>
+          `<tr><td class="col-branch">${esc2(r.name)}</td>${r.delivOpen ? `<td>${r.deliv}</td>` : '<td class="cell-closed">סגור</td>'}${r.taOpen ? `<td>${r.ta}</td>` : '<td class="cell-closed">סגור</td>'}<td class="cell-phone" data-phone="${esc2(r.phone)}" title="לחצו להעתקה">${esc2(r.phone)}</td><td>${esc2(r.addr)}</td></tr>`).join(''); };
+      renderTimes('');
+      $('tmSearch').addEventListener('input', e => renderTimes(e.target.value));
+      $('tmBody').addEventListener('click', e => { const c = e.target.closest('.cell-phone'); if (!c) return;
+        document.querySelectorAll('#tmBody .cell-phone.copied').forEach(x => x.classList.remove('copied')); c.classList.add('copied');
+        const t = c.dataset.phone; try { navigator.clipboard.writeText(t); } catch (err) { /* clipboard off */ }
+        $('tmCopied').textContent = 'הועתק: ' + t + ' — הדביקו בשדה Branch number'; });
       log('Connected'); log('Customer: "יש חניה ליד הסניף?"');
       $('btnHold').addEventListener('click', () => {
         if (!ok()) return;
@@ -660,7 +737,7 @@ const STATIONS = [
         const num = $('cmDialInput').value.replace(/\D/g, '');
         if (s === 'connected') { bad('סדר שגוי: קודם Hold ללקוח, אחר כך חיוג לסניף.'); return; }
         if (s !== 'held') { bad('כבר חייגתם לסניף — המשיכו ברצף.'); return; }
-        if (num !== BRANCH_DIGITS) { $('cmDialInput').value = ''; bad('זה לא המספר של סניף חולון. חפשו חולון ב־Agent Hub והעתיקו את הטלפון מסעיף 1 «פרטי סניף».'); return; }
+        if (num !== BRANCH_DIGITS) { $('cmDialInput').value = ''; bad('זה לא המספר של סניף חולון. קחו את מספר הסניף ממסמך זמנים — עמודת «טלפון» בשורה של «אצה חולון».'); return; }
         setS('branch', 'שיחה לסניף חולון — Connected'); $('cmTabText').textContent = num + ' → סניף חולון';
         log('Calling branch ' + num + '...'); log('Branch Connected');
         setTimeout(() => log('סניף חולון (תשובה מדומה לתרגול): "רגע, בודק… כן, תגיד ללקוח שיש חניה ברחוב."'), 350);
@@ -987,7 +1064,7 @@ function startLesson() {
   AG.init({
     lessonId: LESSON_ID, total: TOTAL,
     title: n => STATIONS[n - 1].title,
-    warn: n => WARN_LEAD + ' ' + STATIONS[n - 1].check + ' לפני שעונים',
+    warn: n => STATIONS[n - 1].warn || (WARN_LEAD + ' ' + STATIONS[n - 1].check + ' לפני שעונים'),
     fbEl: n => document.getElementById('fb' + n),
     fastText: FAST_TEXT,
     onLock: n => document.querySelectorAll(`.opt-btn[data-s="${n}"]`).forEach(b => { b.disabled = true; }),

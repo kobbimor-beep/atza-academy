@@ -479,6 +479,8 @@ footer {
 .turn-hint { color:var(--muted); font-size:.92rem; margin:0 0 .5rem; }
 .chat-panel.quiz-mode, .mock-panel.quiz-mode { opacity:.55; }
 .station .opt-col { margin-top:.2rem; }
+.turn-hint.turn-q { color: var(--ink); font-weight: 700; font-size: 1.02rem; }
+.bubble.sys { align-self:center; background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:.85rem; padding:.25rem .8rem; border-radius:999px; }
 
 /* ===== Fix 1: Times-style sticky stage (chat + mock at top, current turn right below) ===== */
 .done-fold { margin: .2rem 0 .6rem; }
@@ -577,6 +579,27 @@ footer {
   #mNameCard .mh-btn { grid-column: 1 / -1; }
   .mh-branch small { display: none; }
 }
+
+/* lesson 6 (Kobbi 29.9): wider order screen, rows like the real Mishloha «פרטי לקוח» card */
+.sim-grid { grid-template-columns: 1.7fr 1fr; }
+.mock-body .mh-card { max-width: none; }
+#mPhoneCard:not(.folded):not([hidden]) { grid-template-columns: 7.5rem 1fr 8.5rem; gap: 0 .8rem; align-items: center; padding: .5rem 1.1rem .6rem; }
+#mPhoneCard > .mh-lab, #mNameCard > .mh-lab { font-size: .95rem; font-weight: 700; color: #374151; padding: .45rem 0; }
+#mPhoneCard .mh-inp { font-size: 1rem; padding: .35rem .2rem; }
+#mPhoneCard .mh-btn { width: 100%; }
+#mNameCard { grid-template-columns: 7.5rem 1fr 8.5rem; grid-template-areas: "l1 i1 b" "l2 i2 b"; gap: 0 .8rem; align-items: center; border-top: 1px solid #eee; }
+#mNameCard > .mh-lab:nth-of-type(1) { grid-area: l1; }
+#mNameCard > .mh-lab:nth-of-type(2) { grid-area: l2; border-top: 1px solid #eee; }
+#mFirst { grid-area: i1; } #mLast { grid-area: i2; }
+#mNameGo { grid-area: b; }
+.mock-body .mh-types { justify-content: center; }
+.mock-body .mh-type { flex: 0 1 9rem; }
+@media (max-width: 900px) { .sim-grid { grid-template-columns: 1fr; } }
+@media (max-width: 560px) {
+  #mPhoneCard:not(.folded):not([hidden]) { grid-template-columns: auto 1fr auto; padding: .45rem .7rem; }
+  #mNameCard { grid-template-columns: auto 1fr; grid-template-areas: "l1 i1" "l2 i2" "b b"; }
+  #mPhoneCard .mh-btn { width: auto; }
+}
 </style>
 </head>
 <body>
@@ -594,7 +617,7 @@ footer {
 <div class="wrap">
 <section class="card"><h2>לפני שמתחילים</h2>
 <ul>
-<li>סימולטור שיחה: הלקוח כותב בוואטסאפ · אתם עונים או ממלאים במסך ההזמנות.</li>
+<li>סימולטור שיחה: מדמה שיחה בין הנציג ללקוח — הלקוח פונה, ואתם בוחרים מה לענות או ממלאים את הפרטים במסך ההזמנות.</li>
 <li>פתיחה: <strong>«אצה שלום, תרצו לבצע הזמנה?»</strong> · פרטי לקוח קודם (טלפון → שם פרטי → שם משפחה) · טלפון = ערוץ קשר יחיד.</li>
 <li>לקוח חדש: קוראים טלפון בחזרה · לקוח חוזר: מאשרים שם, לא קוראים טלפון שוב.</li>
 <li>מוקד ארצי: הסניפים לא לוקחים הזמנות בטלפון · סניף שגוי = פיצוי כפול.</li>
@@ -750,7 +773,7 @@ const MOCK = (() => {
 })();
 
 const SCENARIOS = [
-  { label: 'לקוח חדש',
+  { label: 'שיחה 1', revealAt: 3, revealLabel: 'לקוח חדש',
     customerOpen: 'שלום, אני רוצה שני סלמון אבוקדו רול ופאד תאי…',
     setup: () => MOCK.reset(),
     turns: [
@@ -764,27 +787,44 @@ const SCENARIOS = [
         check: 'שמתחילים מפרטי לקוח לפני המנות',
         options: [
           { t: 'מעולה, רושמת את המנות. אחר כך ניקח פרטים.', },
-          { t: 'בשמחה! קודם נמלא את פרטי הלקוח במסך — טלפון, ואז שם. אחר כך נעבור להזמנה.', ok: true },
+          { t: 'בשמחה! בוא נתחיל מהטלפון בבקשה', ok: true },
           { t: 'קודם תגיד לי כתובת למשלוח.' },
           { t: 'אפשר בלי טלפון — רק שם פרטי מספיק.' } ] },
-      { type: 'fill', field: 'phone', expect: '0524444444', focus: 'phone', noFast: true,
-        cust: 'הטלפון שלי 052-444-4444',
+      { type: 'fill', field: 'phone', expect: '0526184237', focus: 'phone', noFast: true,
+        cust: 'הטלפון שלי 052-6184237',
         hint: 'הזינו את הטלפון במסך «פרטי לקוח» ולחצו «אישור טלפון». הטלפון הוא ערוץ הקשר היחיד עם הלקוח.',
         check: 'את הזנת הטלפון במסך',
-        badTip: 'הזינו 052-444-4444 בשדה «טלפון» ולחצו «אישור טלפון».' },
-      { type: 'say', tip: 'לקוח חדש — הפרטים לא התמלאו. קוראים את המספר בחזרה לפני השם.',
+        badTip: 'הזינו 052-6184237 בשדה «טלפון» ולחצו «אישור טלפון».' },
+      { type: 'ask', focus: 'name', hint: 'האם עלו פרטי לקוח אוטומטית?',
+        tip: 'הסתכלו במסך ההזמנות: שם פרטי ושם משפחה ריקים — הפרטים לא עלו, כלומר לקוח חדש.',
+        check: 'בדיקה במסך אם עלו פרטי לקוח',
+        options: [ { t: 'כן' }, { t: 'לא', ok: true } ] },
+      { type: 'say', hint: 'מאחר ולא עלו פרטי לקוח, מה צריך לעשות?', tip: 'לקוח חדש — הפרטים לא התמלאו. קוראים את המספר בחזרה לפני השם.',
         check: 'קריאת טלפון בחזרה ללקוח חדש',
         options: [
           { t: 'רשמתי. עכשיו שם פרטי בבקשה.' },
-          { t: 'רק לוודא: המספר הוא 052-444-4444, נכון?', ok: true },
+          { t: 'רק לוודא: המספר הוא 052-6184237, נכון?', ok: true },
           { t: 'אשלח לך SMS לאימות ואחזור אליך.' },
           { t: 'אין צורך לאשר טלפון — נעבור לשם.' } ] },
+      { type: 'say', cust: 'כן', tip: 'אחרי שהלקוח אישר את הטלפון — שואלים שם פרטי.',
+        check: 'שאלה על שם פרטי',
+        options: [
+          { t: 'מה השם הפרטי בבקשה?', ok: true },
+          { t: 'מה הכתובת למשלוח?' },
+          { t: 'מה תרצה להזמין?' },
+          { t: 'אפשר לדלג על השם, יש טלפון.' } ] },
+      { type: 'say', cust: 'נועה', tip: 'אחרי השם הפרטי — שם משפחה (לרוב זה מה שהשליח רואה על הדלת).',
+        check: 'שאלה על שם משפחה',
+        options: [
+          { t: 'תודה נועה, משלוח או איסוף?' },
+          { t: 'ומה שם המשפחה?', ok: true },
+          { t: 'שם משפחה לא חובה, נמשיך.' } ] },
       { type: 'fill', field: 'name', expectFirst: 'נועה', expectLast: 'לוי', focus: 'name', noFast: true,
-        cust: 'כן. נועה לוי.',
+        cust: 'לוי',
         hint: 'הקלידו שם פרטי ושם משפחה (שם המשפחה חשוב — לרוב זה מה שהשליח רואה על הדלת) ולחצו «אישור שם».',
         check: 'את הזנת השם במסך',
         badTip: 'הקלידו בדיוק: נועה / לוי.' },
-      { type: 'say', tip: 'אחרי הפרטים — שואלים משלוח או איסוף עצמי.',
+      { type: 'say', hint: 'כיצד ממשיכים?', tip: 'אחרי הפרטים — שואלים משלוח או איסוף עצמי.',
         check: 'שאלה על משלוח / איסוף אחרי הפרטים',
         options: [
           { t: 'נועה, איזה מנות תרצי?', },
@@ -793,33 +833,34 @@ const SCENARIOS = [
           { t: 'רשמתי איסוף מחיפה בלי לשאול.' } ] }
     ] },
 
-  { label: 'לקוח חוזר',
-    customerOpen: 'היי, אני רוצה להזמין שוב.',
+  { label: 'שיחה 2', revealAt: 1, revealLabel: 'לקוח חוזר',
+    customerOpen: 'שלום אני רוצה להזמין',
     setup: () => MOCK.reset(),
     turns: [
-      { type: 'say', tip: 'פתיחה חמה.', check: 'פתיחת שיחה',
+      { type: 'say', tip: 'פותחים ב«אצה שלום» ומיד עוברים לפרטי לקוח — קודם טלפון, לפני המנות.', check: 'פתיחה + פרטי לקוח קודם',
         options: [
-          { t: 'אצה שלום, תרצו לבצע הזמנה?', ok: true },
-          { t: 'תעביר מספר הזמנה קודם.' },
-          { t: 'רק איסוף עצמי היום.' } ] },
-      { type: 'fill', field: 'phone', expect: '0527778899', focus: 'phone', noFast: true,
-        cust: '052-777-8899',
+          { t: 'בשמחה, מה תרצה להזמין? נתחיל מהמנות.' },
+          { t: 'אצה שלום! בשמחה, נתחיל מהטלפון בבקשה.', ok: true },
+          { t: 'מאיזה סניף אתה מתקשר?' },
+          { t: 'רגע, אני מעביר אותך לסניף הקרוב אליך.' } ] },
+      { type: 'fill', field: 'phone', expect: '0547731905', focus: 'phone', noFast: true,
+        cust: '054-7731905',
         autofill: { first: 'יוסי', last: 'כהן' },
-        hint: 'הזינו את הטלפון. ללקוח חוזר — הפרטים אמורים להתמלא אוטומטית אחרי האישור.',
-        check: 'הזנת טלפון של לקוח חוזר',
-        badTip: 'הזינו 052-777-8899.' },
+        hint: 'הזינו את הטלפון במסך «פרטי לקוח» ולחצו «אישור טלפון».',
+        check: 'הזנת הטלפון במסך',
+        badTip: 'הזינו 054-7731905.' },
       { type: 'say', tip: 'לקוח חוזר: לא קוראים שוב את הטלפון — מאשרים את השם.',
         check: 'אישור שם ללקוח חוזר (בלי לקרוא טלפון שוב)',
         options: [
-          { t: 'רק לוודא שוב את המספר: 052-777-8899?' },
+          { t: 'רק לוודא שוב את המספר: 054-7731905?' },
           { t: 'אני מדבר עם יוסי?', ok: true },
           { t: 'תכתיב שוב שם פרטי ומשפחה מההתחלה.' },
           { t: 'מדלגים על הפרטים — עוברים ישר להזמנה.' } ] }
     ] },
 
-  { label: 'איסוף + מוקד',
+  { label: 'שיחה 3 · איסוף', tagLabel: 'איסוף + מוקד',
     customerOpen: 'שלום, הגעתי למסעדה? אני רוצה לאסוף מבית שמש. תעבירו אותי לסניף.',
-    setup: () => MOCK.reset({ phone: '0501112233', first: 'דני', last: 'מזרחי' }),
+    setup: () => MOCK.reset({ phone: '0504829316', first: 'דני', last: 'מזרחי' }),
     turns: [
       { type: 'say', tip: 'מוקד ארצי: הסניפים לא לוקחים הזמנות בטלפון. מתנצלים ומסבירים.',
         check: 'תסריט מוקד ארצי (בלי להעביר לסניף)',
@@ -856,7 +897,7 @@ const QUIZ = [
   { title: 'טלפון', tip: 'מהו ערוץ הקשר היחיד עם הלקוח?', check: 'טלפון = ערוץ קשר יחיד',
     q: 'מהו ערוץ הקשר היחיד עם הלקוח במערכת?',
     options: [
-      { t: 'אימייל' }, { t: 'וואטסאפ של הסניף' },
+      { t: 'אימייל' }, { t: 'צ׳אט באתר של הסניף' },
       { t: 'מספר הטלפון שמוזן בפרטי הלקוח', ok: true },
       { t: 'שם משפחה בלבד' } ] },
   { title: 'חדש / חוזר', tip: 'מה שונה בין לקוח חדש לחוזר אחרי הזנת טלפון?', check: 'נוהל לקוח חדש מול חוזר',
@@ -1205,7 +1246,7 @@ function activateTurn(n) {
   const a = ALL[n - 1];
   document.getElementById('scenarioTag').textContent = a.kind === 'quiz'
     ? 'חידון נהלים'
-    : ('שיחה ' + (a.si + 1) + '/' + SCENARIOS.length + ' · ' + a.sc.label);
+    : ('שיחה ' + (a.si + 1) + '/' + SCENARIOS.length + ((a.sc.revealAt != null && a.ti > a.sc.revealAt) ? ' · ' + a.sc.revealLabel : (a.sc.tagLabel ? ' · ' + a.sc.tagLabel : '')));
   if (a.kind === 'quiz') {
     document.getElementById('chatPanel').classList.add('quiz-mode');
     document.getElementById('mockPanel').classList.add('quiz-mode');
@@ -1219,16 +1260,19 @@ function activateTurn(n) {
   if (ti === 0) {
     clearChat();
     if (sc.setup) sc.setup();
+    pushChat('sys', '📞 שיחה חדשה!');
     if (sc.customerOpen) pushChat('cust', sc.customerOpen);
   }
   if (t.cust) pushChat('cust', t.cust);
   const hint = document.getElementById('hint' + n);
   const opts = document.getElementById('opts' + n);
-  if (t.type === 'say') {
+  if (t.type === 'say' || t.type === 'ask') {
     hint.textContent = t.hint || 'בחרו מה לענות ללקוח:';
+    hint.classList.toggle('turn-q', !!t.hint);
     opts.innerHTML = t.options.map((o, k) =>
       `<button type="button" class="opt-btn" data-s="${n}" data-o="${k}"><span class="opt-mark"></span><span>${esc(o.t)}</span></button>`).join('');
   } else if (t.type === 'fill') {
+    hint.classList.remove('turn-q');
     hint.innerHTML = t.hint || 'הזינו / לחצו במסך ההזמנות למעלה.';
     opts.innerHTML = '';
     if (t.prep) t.prep(n);
@@ -1261,11 +1305,11 @@ document.addEventListener('click', e => {
     return;
   }
   const t = a.t;
-  if (t.type !== 'say') return;
+  if (t.type !== 'say' && t.type !== 'ask') return;
   if (t.options[k].ok) {
     opt.classList.add('opt-right');
     all.forEach(b => { b.disabled = true; });
-    pushChat('agent', t.options[k].t);
+    if (t.type === 'say') pushChat('agent', t.options[k].t);
     if (t.onOk) t.onOk();
     stationPass(n, t.options[k].t);
   } else {

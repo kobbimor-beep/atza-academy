@@ -479,6 +479,7 @@ footer {
 .turn-hint { color:var(--muted); font-size:.92rem; margin:0 0 .5rem; }
 .chat-panel.quiz-mode, .mock-panel.quiz-mode { opacity:.55; }
 .station .opt-col { margin-top:.2rem; }
+.bubble.sys { align-self:center; background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:.85rem; padding:.25rem .8rem; border-radius:999px; }
 
 /* ===== Fix 1: Times-style sticky stage (chat + mock at top, current turn right below) ===== */
 .done-fold { margin: .2rem 0 .6rem; }
@@ -577,6 +578,22 @@ footer {
   #mNameCard .mh-btn { grid-column: 1 / -1; }
   .mh-branch small { display: none; }
 }
+
+/* Kobbi 29.9: wider order screen (~63/37), like the real Mishloha system */
+.sim-grid { grid-template-columns: 1.7fr 1fr; }
+.mock-body .mh-card { max-width: none; }
+.mock-body .mh-types { justify-content: center; }
+.mock-body .mh-type { flex: 0 1 9rem; }
+@media (max-width: 900px) { .sim-grid { grid-template-columns: 1fr; } }
+
+/* lesson 7: customer card = labelled rows on one line; address rows label-right like the real form */
+.mock-body > .mh-card:first-child:not(#mPhoneCard) { gap: .2rem 1.4rem; padding: .35rem 1rem; }
+.mock-body > .mh-card:first-child:not(#mPhoneCard) .mh-readonly span { font-weight: 700; color: #374151; }
+#addrCard:not(.folded):not([hidden]) { gap: .05rem 1.4rem; padding: .45rem 1rem .55rem; }
+#addrCard .mh-row label { min-width: 3.4rem; font-weight: 700; font-size: .88rem; }
+#addrCard .mh-row .mh-inp { border-bottom: 1px solid #e5e7eb; }
+#addrCard #addrGo { width: 60%; justify-self: center; grid-column: 1 / -1; }
+@media (max-width: 560px) { #addrCard #addrGo { width: 100%; } #addrCard .mh-row label { min-width: 0; } }
 </style>
 </head>
 <body>
@@ -594,6 +611,7 @@ footer {
 <div class="wrap">
 <section class="card"><h2>לפני שמתחילים</h2>
 <ul>
+<li>סימולטור שיחה: מדמה שיחה בין הנציג ללקוח — הלקוח פונה, ואתם בוחרים מה לענות או ממלאים את הפרטים במסך ההזמנות.</li>
 <li>אחרי פרטים: אם משלוח — «משלוח». לקוח חוזר: «כתובות שמורות» → אישור → השלמת דירה/קומה/הוראות כניסה.</li>
 <li>עיר שאינה עיר סניף → עצירה ובדיקה ב־Agent Hub · תמיד אומרים דמי משלוח, זמן ומינימום.</li>
 <li>מקום שמשלוחה לא מזהה (קימרון): עיר = עיר הסניף · הערה עם שם המקום · ✔ בלי רחוב אם אין · הוספת דמי משלוח ידנית.</li>
@@ -611,8 +629,9 @@ footer {
     <div class="mock-body">
 <div class="mh-card">
   <h3 class="mh-h">פרטי לקוח <span class="mh-ok">✓</span></h3>
-  <div class="mh-readonly"><span>טלפון</span><b dir="ltr">052·······</b></div>
-  <div class="mh-readonly"><span>שם</span><b>לקוח/ה בשיחה</b></div>
+  <div class="mh-readonly"><span><span class="mh-star">*</span> טלפון:</span><b dir="ltr" id="roPhone">—</b></div>
+  <div class="mh-readonly"><span><span class="mh-star">*</span> שם פרטי:</span><b id="roFirst">—</b></div>
+  <div class="mh-readonly"><span><span class="mh-star">*</span> שם משפחה:</span><b id="roLast">—</b></div>
 </div>
 <div class="mh-types" id="mTypes">
   <button type="button" class="mh-type" data-t="delivery">משלוח</button>
@@ -700,6 +719,8 @@ const MOCK = (() => {
   let state = { mode: null, city: '', street: '', no: '', apt: '', floor: '', note: '', nostreet: false, fee: null, saved: null };
   function f(k) { return document.querySelector('#addrCard [data-f="' + k + '"]'); }
   function paint() {
+    const ro = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v || '—'; };
+    ro('roPhone', state.phone); ro('roFirst', state.first); ro('roLast', state.last);
     ['city','street','no','apt','floor','note'].forEach(k => { const el = f(k); if (el) el.value = state[k] || ''; });
     if (f('nostreet')) f('nostreet').checked = !!state.nostreet;
     document.querySelectorAll('#mTypes .mh-type').forEach(b => b.classList.toggle('on', b.dataset.t === state.mode));
@@ -807,9 +828,9 @@ const MOCK = (() => {
 })();
 
 const SCENARIOS = [
-  { label: 'כתובת שמורה',
+  { label: 'שיחה 1', revealAt: 0, revealLabel: 'כתובת שמורה',
     customerOpen: 'היי, משלוח בבקשה — לאותה כתובת כמו תמיד, הדקל 12 בחולון.',
-    setup: () => MOCK.reset({ phone: '0521112233', first: 'מיכל', last: 'אברהם' }),
+    setup: () => MOCK.reset({ phone: '0528461973', first: 'מיכל', last: 'אברהם' }),
     turns: [
       { type: 'fill', field: 'mode', expect: 'delivery', focus: 'types', noFast: true,
         hint: 'לחצו «משלוח» במסך.', check: 'בחירת משלוח', badTip: 'הלקוחה ביקשה משלוח — לחצו «משלוח».' },
@@ -830,9 +851,9 @@ const SCENARIOS = [
         check: 'השלמת דירה / קומה / הערת כניסה', badTip: 'מלאו דירה, קומה והערה (למשל על הקוד / להתקשר).' }
     ] },
 
-  { label: 'עיר לא סניף',
+  { label: 'שיחה 2', revealAt: 0, revealLabel: 'עיר לא סניף',
     customerOpen: 'שלום, משלוח למעוז חיים בבקשה.',
-    setup: () => MOCK.reset({ showHub: true }),
+    setup: () => MOCK.reset({ phone: '0536259184', first: 'אורי', last: 'שלום', showHub: true }),
     turns: [
       { type: 'say', tip: 'עיר שאינה עיר סניף — עוצרים ובודקים ב־Agent Hub לפני שממשיכים בכתובת.',
         check: 'עצירה לבדיקת כיסוי ב־Hub',
@@ -853,9 +874,9 @@ const SCENARIOS = [
           { t: 'דמי משלוח ₪25 כמו קימרון.' } ] }
     ] },
 
-  { label: 'קימרון',
+  { label: 'שיחה 3', revealAt: -1, revealLabel: 'קימרון',
     customerOpen: 'אפשר משלוח לקימרון? אין לי רחוב ומספר, רק להתקשר כשנכנסים.',
-    setup: () => MOCK.reset({ mode: 'delivery', showHub: true, showFee: true }),
+    setup: () => MOCK.reset({ phone: '0502947618', first: 'רותם', last: 'דהן', mode: 'delivery', showHub: true, showFee: true }),
     turns: [
       { type: 'hub', expect: 'קימרון', focus: 'hub', noFast: true,
         hint: 'בדקו ב־Hub הסימולטור: חפשו «קימרון».', check: 'בדיקת קימרון ב־Hub' },
@@ -873,9 +894,9 @@ const SCENARIOS = [
         check: 'הוספת דמי משלוח 25 לקימרון' }
     ] },
 
-  { label: 'כתובת מזוהה',
+  { label: 'שיחה 4', revealAt: 0, revealLabel: 'כתובת מזוהה',
     customerOpen: 'משלוח לחולון, רחוב הפעמון 4, דירה 9 קומה 3, בית משותף — הקוד 1122.',
-    setup: () => MOCK.reset({ mode: 'delivery', city: 'חולון' }),
+    setup: () => MOCK.reset({ phone: '0587315620', first: 'עומר', last: 'ביטון', mode: 'delivery', city: 'חולון' }),
     turns: [
       { type: 'say', tip: 'חולון = עיר סניף ומזוהה — ממשיכים לרחוב ולפרטי כניסה.',
         check: 'המשך כשהכתובת מזוהה',
@@ -1251,7 +1272,7 @@ function activateTurn(n) {
   const a = ALL[n - 1];
   document.getElementById('scenarioTag').textContent = a.kind === 'quiz'
     ? 'חידון נהלים'
-    : ('שיחה ' + (a.si + 1) + '/' + SCENARIOS.length + ' · ' + a.sc.label);
+    : ('שיחה ' + (a.si + 1) + '/' + SCENARIOS.length + ((a.sc.revealAt != null && a.ti > a.sc.revealAt) ? ' · ' + a.sc.revealLabel : ''));
   if (a.kind === 'quiz') {
     document.getElementById('chatPanel').classList.add('quiz-mode');
     document.getElementById('mockPanel').classList.add('quiz-mode');
@@ -1265,6 +1286,7 @@ function activateTurn(n) {
   if (ti === 0) {
     clearChat();
     if (sc.setup) sc.setup();
+    pushChat('sys', '📞 שיחה חדשה!');
     if (sc.customerOpen) pushChat('cust', sc.customerOpen);
   }
   if (t.cust) pushChat('cust', t.cust);

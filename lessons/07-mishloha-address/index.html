@@ -480,6 +480,15 @@ footer {
 .chat-panel.quiz-mode, .mock-panel.quiz-mode { opacity:.55; }
 .station .opt-col { margin-top:.2rem; }
 .bubble.sys { align-self:center; background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:.85rem; padding:.25rem .8rem; border-radius:999px; }
+.turn-hint.turn-q { color: var(--ink); font-weight: 700; font-size: 1.02rem; }
+.turn-x { margin: 0 0 .5rem; }
+.hub-real { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 10px; padding: .5rem .75rem; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem 1rem; }
+.hub-open { display: inline-block; background: #1e3a5f; color: #fff; font-weight: 800; text-decoration: none; border-radius: 8px; padding: .45rem .95rem; }
+.hub-open:hover { background: #274b7a; }
+.hub-steps { margin: 0; padding-inline-start: 1.2rem; font-size: .88rem; color: #334155; }
+.attn-box { background: #fff7ed; border: 1px solid #fdba74; border-right: 4px solid #ea580c; border-radius: 8px; padding: .45rem .75rem; font-size: .95rem; color: #7c2d12; }
+.attn-steps { margin: .25rem 0 0; padding-inline-start: 1.3rem; }
+.attn-steps li { margin: .1rem 0; }
 
 /* ===== Fix 1: Times-style sticky stage (chat + mock at top, current turn right below) ===== */
 .done-fold { margin: .2rem 0 .6rem; }
@@ -594,6 +603,22 @@ footer {
 #addrCard .mh-row .mh-inp { border-bottom: 1px solid #e5e7eb; }
 #addrCard #addrGo { width: 60%; justify-self: center; grid-column: 1 / -1; }
 @media (max-width: 560px) { #addrCard #addrGo { width: 100%; } #addrCard .mh-row label { min-width: 0; } }
+/* fix (Kobbi 29.9): label and input never overlap — note row spans the full width */
+#addrCard .mh-row { display: flex; align-items: center; gap: .45rem; min-width: 0; }
+#addrCard .mh-row label { flex: 0 0 auto; white-space: nowrap; }
+#addrCard .mh-row .mh-inp { flex: 1 1 auto; width: auto; min-width: 0; }
+#addrCard .mh-row:has(> [data-f="note"]) { grid-column: 1 / -1; }
+/* v8: the simulated Hub is gone — learners use the real Agent Hub (button in the question) */
+#hubWrap { display: none !important; }
+/* saved addresses open inside the order screen (not a full-page popup) so the question stays visible */
+#savedModal { position: static; inset: auto; background: transparent; z-index: auto; margin-top: .4rem; }
+#savedModal .mh-modal-box { width: auto; padding: .45rem .7rem .55rem; border: 2px solid #e91e63; border-radius: 10px; box-shadow: none; }
+#savedModal .mh-h { margin: 0 0 .35rem; }
+#savedModal .mh-x { left: .45rem; top: .35rem; width: 24px; height: 24px; }
+#savedList { display: grid; grid-template-columns: repeat(3, 1fr); gap: .3rem; }
+#savedList .mh-saved { padding: .3rem .5rem; font-size: .86rem; }
+.mock-body:has(#savedModal:not([hidden])) #addrCard { display: none !important; }
+@media (max-width: 560px) { #savedList { grid-template-columns: 1fr 1fr; } }
 
 /* ===== New-conversation transition ===== */
 .conv-bar { background: linear-gradient(90deg, #c41230, #e91e63); color: #fff; font-weight: 800; font-size: .95rem;
@@ -640,6 +665,8 @@ footer {
   font-weight: 900; font-size: 1.02rem; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,.25); display: inline-block; }
 .call-callout-wrap { width: 300px; max-width: 100%; direction: ltr; text-align: left; margin-top: .15rem; }
 .call-callout::before { content: ""; position: absolute; top: -9px; left: 52px; border: 8px solid transparent; border-top: 0; border-bottom-color: #e8622c; }
+.ring-btn { margin-top: .45rem; background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; padding: .2rem .8rem; font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
+.ring-btn[hidden] { display: none !important; }
 .call-msg { direction: rtl; background: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 8px; padding: .3rem .8rem; font-weight: 700; font-size: .9rem; }
 .call-msg[hidden] { display: none !important; }
 @keyframes incFlash { 0% { background: #fff; } 50% { background: #dbeafe; } }
@@ -737,7 +764,7 @@ footer {
   <p style="font-size:.8rem;color:#64748b;margin:.4rem 0 0">במשמרת: <a href="https://address.kobimor.com/" target="_blank" rel="noopener">address.kobimor.com</a></p>
 </div>
 <div class="mh-fee mh-sec" id="feeWrap" data-sec="fee" hidden><button type="button" class="mh-sum"></button>
-  <div class="mh-fee-head"><div><strong>הוספת דמי משלוח</strong><div id="feeSum">0 ₪</div></div><div class="mh-fee-logo">אצה</div></div>
+  <div class="mh-fee-head"><div><strong>הוספת דמי משלוח</strong><div id="feeSum">כבר כלול: ₪20 (בית שאן) · תוספת: ₪0</div></div><div class="mh-fee-logo">אצה</div></div>
   <div class="mh-fee-grid" id="feeGrid"></div>
   <button type="button" class="mh-btn" id="feeAdd">הוספה להזמנה</button>
 </div>
@@ -839,15 +866,22 @@ const MOCK = (() => {
         else __fillBad(n, 'מלאו דירה, קומה והערה שעוזרת לשליח להיכנס.');
         return;
       }
+      if (a.t.field === 'kimtry') {
+        const city = f('city').value.replace(/\s+/g, ' ').trim();
+        const msg = document.getElementById('addrMsg');
+        if (city.includes('קימרון')) { msg.hidden = false; msg.textContent = '✗ משלוחה: העיר «קימרון» לא נמצאה במערכת.'; state.city = city; __fillOk(n, 'ראיתם: «קימרון» לא נמצאה במערכת'); }
+        else __fillBad(n, a.t.badTip);
+        return;
+      }
       if (a.t.field === 'kimron') {
         const city = f('city').value.replace(/\s+/g, ' ').trim();
         const note = f('note').value; const ns = f('nostreet').checked;
         const msg = document.getElementById('addrMsg');
-        if (city.includes('קימרון')) { msg.hidden = false; msg.textContent = 'משלוחה: העיר «קימרון» לא נמצאה.'; __fillBad(n, 'בשדה «עיר» כותבים את עיר הסניף (בית שאן), לא את קימרון.'); return; }
+        if (city.includes('קימרון')) { msg.hidden = false; msg.textContent = '✗ משלוחה: העיר «קימרון» לא נמצאה במערכת.'; __fillBad(n, 'צעד 1: בשדה «עיר» כותבים את עיר הסניף — בית שאן (קימרון לא במערכת).'); return; }
         msg.hidden = true;
-        if (city !== 'בית שאן') { __fillBad(n, 'עיר = בית שאן (הסניף שממנו יוצא המשלוח).'); return; }
-        if (!note.includes('קימרון')) { __fillBad(n, 'בהערה חייבים לציין שזה משלוח לקימרון.'); return; }
-        if (!ns) { __fillBad(n, 'סמנו «כתובת בלי מס׳ בית או רחוב».'); return; }
+        if (city !== 'בית שאן') { __fillBad(n, 'צעד 1: עיר = בית שאן (הסניף שממנו יוצא המשלוח לקימרון).'); return; }
+        if (!note.includes('קימרון')) { __fillBad(n, 'צעד 2: בשדה «הוסיפו הערה» כתבו «קימרון» — כך השליח יודע לאן לנסוע.'); return; }
+        if (!ns) { __fillBad(n, 'צעד 3: סמנו ✔ «כתובת בלי מס׳ בית או רחוב» — אין רחוב ומספר בקימרון.'); return; }
         state.city = city; state.note = note; state.nostreet = true; paint();
         __fillOk(n, 'עיר בית שאן · הערה עם קימרון · ✔ בלי רחוב');
         return;
@@ -874,13 +908,13 @@ const MOCK = (() => {
     document.getElementById('feeGrid').addEventListener('click', e => {
       const b = e.target.closest('.mh-fee-btn'); if (!b) return;
       document.querySelectorAll('#feeGrid .mh-fee-btn').forEach(x => x.classList.remove('on')); b.classList.add('on');
-      state.fee = +b.dataset.v; document.getElementById('feeSum').textContent = state.fee + ' ₪';
+      state.fee = +b.dataset.v; document.getElementById('feeSum').textContent = 'תוספת ₪' + state.fee + ' · סה״כ דמי משלוח ₪' + (20 + state.fee) + ' (₪20 בית שאן + ₪' + state.fee + ')';
     });
     document.getElementById('feeAdd').addEventListener('click', () => {
       const n = current, a = ALL[n - 1];
       if (!a || a.kind !== 'turn' || a.t.type !== 'fill' || a.t.field !== 'fee') return;
       if (state.fee === a.t.expect) __fillOk(n, 'דמי משלוח ' + state.fee);
-      else __fillBad(n, state.fee == null ? 'בחרו סכום מהכפתורים.' : 'בדקו ב־Hub את דמי המשלוח ובחרו את הכפתור המתאים.');
+      else __fillBad(n, state.fee == null ? 'בחרו סכום מהכפתורים.' : (a.t.badTip || 'בדקו ב־Hub את דמי המשלוח ובחרו את הכפתור המתאים.'));
     });
     paint();
   }
@@ -899,33 +933,65 @@ const MOCK = (() => {
   return { init, reset, paint, highlight, get state() { return state; }, set(k, v) { state[k] = v; paint(); } };
 })();
 
+const HUB_URL = 'https://address.kobimor.com/';
+const hubBox = (place) => `<div class="hub-real">
+  <a class="hub-open" href="${HUB_URL}" target="_blank" rel="noopener">🔎 פתחו את Agent Hub</a>
+  <ol class="hub-steps"><li>ה־Hub נפתח בלשונית חדשה (האתר האמיתי).</li><li>לחצו <b>HE</b> למעלה (בלי זה חיפוש בעברית לא נמצא) וחפשו <b>«${place}»</b>.</li><li>חזרו לכאן ובחרו מה ה־Hub הראה.</li></ol></div>`;
+const noteBox = (html) => `<div class="attn-box" role="note">${html}</div>`;
+
 const SCENARIOS = [
   { label: 'שיחה 1', revealAt: 0, revealLabel: 'כתובת שמורה',
-    customerOpen: 'היי, משלוח בבקשה — לאותה כתובת כמו תמיד, הדקל 12 בחולון.',
+    preChat: [
+      ['cust', 'שלום, אני רוצה להזמין'],
+      ['agent', 'בשמחה, בוא נתחיל מהטלפון בבקשה'],
+      ['cust', '052-8461973'],
+      ['sys', '✓ לקוחה קיימת — פרטי הלקוח עלו אוטומטית'],
+      ['agent', 'אני מדברת עם מיכל?'],
+      ['cust', 'כן'],
+      ['agent', 'איסוף או משלוח?'],
+      ['cust', 'משלוח']
+    ],
     caller: '0528461973', setup: () => MOCK.reset({ phone: '0528461973', first: 'מיכל', last: 'אברהם' }),
     turns: [
       { type: 'fill', field: 'mode', expect: 'delivery', focus: 'types', noFast: true,
-        hint: 'לחצו «משלוח» במסך.', check: 'בחירת משלוח', badTip: 'הלקוחה ביקשה משלוח — לחצו «משלוח».' },
-      { type: 'say', tip: 'לקוח חוזר — כתובות שמורות, שואלים אם זו הכתובת.',
-        check: 'שאלה על כתובת שמורה',
+        hint: 'הפרטים כבר נלקחו (לקוחה קיימת), והלקוחה ענתה «משלוח» — ראו בחלון «שיחה עם הלקוח». לחצו «משלוח» במסך ההזמנות.',
+        check: 'בחירת משלוח', badTip: 'הלקוחה ביקשה משלוח — לחצו «משלוח».' },
+      { type: 'ask', hint: 'הלקוח קיים במערכת — צריך לברר את פרטי הכתובת שלו, או שיש לנו אותה שמורה?',
+        tip: 'ללקוח קיים הכתובות שמורות במערכת — בודקים קודם ב«כתובות שמורות».', check: 'בדיקת כתובות שמורות ללקוח קיים',
         options: [
-          { t: 'רשמתי כתובת חדשה בלי לשאול.' },
-          { t: 'מיכל, לשלוח להדקל 12 בחולון — הכתובת השמורה?', ok: true },
-          { t: 'תכתיבי את כל הכתובת מההתחלה תמיד.' } ] },
+          { t: 'מבקשים מהלקוח להכתיב את כל הכתובת מההתחלה' },
+          { t: 'בודקים ב«כתובות שמורות» — ללקוח קיים הכתובות שמורות במערכת', ok: true },
+          { t: 'בודקים ב־Agent Hub מה הכתובת של הלקוח' },
+          { t: 'מקלידים את העיר של הסניף הקרוב וממשיכים' } ] },
       { type: 'fill', field: 'openSaved', focus: 'saved', noFast: true,
-        cust: 'כן, בדיוק.',
-        hint: 'לחצו «כתובות שמורות» במסך הכתובת.', check: 'פתיחת כתובות שמורות', badTip: 'לחצו «כתובות שמורות».' },
+        hint: 'לחצו על «כתובות שמורות» במסך הכתובת.', check: 'פתיחת כתובות שמורות', badTip: 'לחצו «כתובות שמורות».' },
+      { type: 'ask', focus: 'saved', hint: 'לחצתם על «כתובות שמורות» והיו כמה כתובות — מה עושים?',
+        tip: 'לא מנחשים: מקריאים ללקוח את הכתובות עד שהוא מאשר «כן, זו הכתובת».', check: 'הקראת הכתובות השמורות ללקוח',
+        options: [
+          { t: 'בוחרים את הכתובת הראשונה ברשימה' },
+          { t: 'מקריאים ללקוח את הכתובות אחת־אחת, עד שהוא אומר «כן, זו הכתובת שאני רוצה»', ok: true },
+          { t: 'בוחרים את הכתובת בעיר הקרובה ביותר לסניף' },
+          { t: 'מבקשים מהלקוח לבחור מספר מהרשימה בלי להקריא' } ] },
       { type: 'fill', field: 'pickSaved', expect: SAVED_TARGET, focus: 'saved', noFast: true,
-        hint: 'בחרו ברשימה את «הדקל 12, חולון».', check: 'בחירת הכתובת השמורה', badTip: 'בחרו את הכתובת שהלקוחה אישרה.' },
+        pre: [['agent', 'יש לי כמה כתובות שמורות: הדקל 12 בחולון, הרצל 8 בפתח תקווה, הנרקיס 3 בחדרה…']],
+        cust: 'הדקל 12 בחולון — כן, זו הכתובת שאני רוצה.',
+        hint: 'הלקוחה אישרה — בחרו ברשימה את הכתובת שהיא אישרה.', check: 'בחירת הכתובת השמורה שאושרה', badTip: 'בחרו את הכתובת שהלקוחה אישרה: הדקל 12, חולון.' },
+      { type: 'say', hint: 'הכתובת נבחרה. מה עוד חסר לשליח? מה שואלים?',
+        tip: 'אחרי בחירת כתובת — תמיד משלימים קומה, דירה / בית פרטי והוראות כניסה.', check: 'שאלה על קומה / דירה / בית פרטי / כניסה',
+        options: [
+          { t: 'תודה, ההזמנה בדרך!' },
+          { t: 'באיזו קומה ומה מספר הדירה? או שזה בית פרטי? יש משהו שחשוב שהשליח יידע בכניסה?', ok: true },
+          { t: 'מה המיקוד שלך?' },
+          { t: 'אין צורך בפרטים נוספים — השליח יתקשר.' } ] },
       { type: 'fill', field: 'courier', focus: 'addr', noFast: true,
-        cust: 'דירה 5, קומה 2. יש להתקשר בכניסה — הקוד לא עובד.',
-        hint: 'השלימו דירה, קומה והערה לשליח בטופס, ולחצו «המשך». תמיד מוודאים פרטי כניסה.',
-        check: 'השלמת דירה / קומה / הערת כניסה', badTip: 'מלאו דירה, קומה והערה (למשל על הקוד / להתקשר).' }
+        cust: 'קומה 2, דירה 5. הקוד בכניסה לא עובד — שיתקשר כשהוא מגיע.',
+        hint: 'השלימו בטופס: <b>דירה</b>, <b>קומה</b>, ובשדה <b>«הוסיפו הערה»</b> את הוראת הכניסה — ולחצו «המשך».',
+        check: 'השלמת דירה / קומה / הערת כניסה', badTip: 'מלאו דירה, קומה והערה לשליח (למשל: הקוד לא עובד — להתקשר).' }
     ] },
 
   { label: 'שיחה 2', revealAt: 0, revealLabel: 'עיר לא סניף',
     customerOpen: 'שלום, משלוח למעוז חיים בבקשה.',
-    caller: '0536259184', setup: () => MOCK.reset({ phone: '0536259184', first: 'אורי', last: 'שלום', showHub: true }),
+    caller: '0536259184', setup: () => MOCK.reset({ phone: '0536259184', first: 'אורי', last: 'שלום' }),
     turns: [
       { type: 'say', tip: 'עיר שאינה עיר סניף — עוצרים ובודקים ב־Agent Hub לפני שממשיכים בכתובת.',
         check: 'עצירה לבדיקת כיסוי ב־Hub',
@@ -934,36 +1000,59 @@ const SCENARIOS = [
           { t: 'רגע — מעוז חיים אינה עיר סניף. אבדוק ב־Agent Hub אם יש משלוח, וכמה דמי משלוח / זמן / מינימום.', ok: true },
           { t: 'אין משלוח ליישובים בלי סניף.' },
           { t: 'מעביר לסניף בית שאן שיחליט.' } ] },
-      { type: 'hub', expect: 'מעוז חיים', focus: 'hub', noFast: true,
-        hint: 'בלוח Agent Hub הסימולטור — חפשו «מעוז חיים» ולחצו בדיקה. (במשמרת האמיתית: address.kobimor.com)',
-        check: 'חיפוש מעוז חיים ב־Hub' },
-      { type: 'say', tip: 'אומרים ללקוח את המספרים מה־Hub.',
+      { type: 'ask', hint: 'בדקו ב־Agent Hub האמיתי: מה ה־Hub מראה ל«מעוז חיים»?', html: hubBox('מעוז חיים'),
+        tip: 'פתחו את ה־Hub, חפשו «מעוז חיים» והשוו: יש משלוח? מאיזה סניף? דמי משלוח, מינימום וזמן.', check: 'בדיקת מעוז חיים ב־Agent Hub',
+        options: [
+          { t: 'יש משלוח · מסניף בית שאן · ₪25 · מינימום ₪0 · 75 דק׳' },
+          { t: 'יש משלוח · מסניף בית שאן · ₪35 · מינימום ₪0 · 75 דק׳', ok: true },
+          { t: 'יש משלוח · מסניף חיפה · ₪35 · מינימום ₪50 · 60 דק׳' },
+          { t: 'אין משלוח למעוז חיים' } ] },
+      { type: 'say', tip: 'אומרים ללקוח את כל המספרים מה־Hub: דמי משלוח, מינימום וזמן.',
         check: 'מסירת דמי משלוח / זמן / מינימום ללקוח',
         options: [
           { t: 'יש משלוח מבית שאן. דמי משלוח ₪35, מינימום ₪0, כ־75 דק׳. ממשיכים?', ok: true },
           { t: 'יש משלוח בחינם תוך 20 דק׳.' },
           { t: 'אין משלוח למעוז חיים.' },
-          { t: 'דמי משלוח ₪25 כמו קימרון.' } ] }
+          { t: 'דמי משלוח ₪20 כמו בבית שאן.' } ] }
     ] },
 
   { label: 'שיחה 3', revealAt: -1, revealLabel: 'קימרון',
     customerOpen: 'אפשר משלוח לקימרון? אין לי רחוב ומספר, רק להתקשר כשנכנסים.',
-    caller: '0502947618', setup: () => MOCK.reset({ phone: '0502947618', first: 'רותם', last: 'דהן', mode: 'delivery', showHub: true, showFee: true }),
+    caller: '0502947618', setup: () => MOCK.reset({ phone: '0502947618', first: 'רותם', last: 'דהן', mode: 'delivery' }),
     turns: [
-      { type: 'hub', expect: 'קימרון', focus: 'hub', noFast: true,
-        hint: 'בדקו ב־Hub הסימולטור: חפשו «קימרון».', check: 'בדיקת קימרון ב־Hub' },
-      { type: 'say', tip: 'מדווחים ללקוח לפי ה־Hub, ומסבירים שמשלוחה לא מזהה את המקום.',
-        check: 'הסבר ללקוח + מספרים',
+      { type: 'ask', hint: 'בדקו ב־Agent Hub האמיתי: מה ה־Hub מראה ל«קימרון»?', html: hubBox('קימרון'),
+        tip: 'פתחו את ה־Hub, חפשו «קימרון» והשוו סניף, דמי משלוח, מינימום וזמן.', check: 'בדיקת קימרון ב־Agent Hub',
         options: [
-          { t: 'יש משלוח מבית שאן · ₪25 · מינ׳ ₪0 · 75 דק׳. משלוחה לא מזהה את קימרון — ארשום את העיר כבית שאן ואציין קימרון בהערה, בלי רחוב.', ok: true },
+          { t: 'יש משלוח · מסניף בית שאן · ₪20 · מינימום ₪0 · 75 דק׳' },
+          { t: 'יש משלוח · מסניף בית שאן · ₪35 · מינימום ₪0 · 75 דק׳' },
+          { t: 'יש משלוח · מסניף בית שאן · ₪25 · מינימום ₪0 · 75 דק׳', ok: true },
+          { t: 'אין משלוח לקימרון' } ] },
+      { type: 'say', tip: 'מדווחים ללקוח את מה שה־Hub הראה.', check: 'מסירת המספרים ללקוח',
+        options: [
+          { t: 'יש משלוח לקימרון מסניף בית שאן · דמי משלוח ₪25 · מינימום ₪0 · כ־75 דק׳. ארשום את הכתובת.', ok: true },
           { t: 'אין משלוח לקימרון.' },
-          { t: 'נרשום עיר «קימרון» במסך כמו כל עיר.' } ] },
+          { t: 'יש משלוח, ₪20 כמו בבית שאן.' } ] },
+      { type: 'fill', field: 'kimtry', focus: 'addr', noFast: true,
+        html: noteBox('⚠️ <b>שימו לב:</b> קימרון לא מופיעה במערכת — כשמקלידים «קימרון» בשדה העיר, המערכת לא מוצאת אותה. נסו בעצמכם:'),
+        hint: 'הקלידו <b>«קימרון»</b> בשדה <b>«עיר»</b> ולחצו «המשך» — ותראו מה משלוחה עונה.',
+        check: 'ניסיון להקליד קימרון בשדה העיר', badTip: 'הקלידו «קימרון» בשדה «עיר» ולחצו «המשך».' },
+      { type: 'ask', hint: 'משלוחה לא מוצאת את קימרון. מה כותבים בשדה «עיר»?',
+        tip: 'כשהמקום לא במערכת — עיר = עיר הסניף שממנו יוצא המשלוח (לפי ה־Hub: בית שאן).', check: 'עיר = עיר הסניף',
+        options: [
+          { t: 'בית שאן — עיר הסניף שממנו יוצא המשלוח', ok: true },
+          { t: 'שוב «קימרון», עד שהמערכת תמצא' },
+          { t: 'עיר קרובה כלשהי שהמערכת מכירה' },
+          { t: 'משאירים את העיר ריקה' } ] },
       { type: 'fill', field: 'kimron', focus: 'addr', noFast: true,
-        hint: 'בטופס: עיר = בית שאן · הערה כוללת «קימרון» · ✔ «כתובת בלי מס׳ בית או רחוב» · «המשך».',
-        check: 'מילוי כתובת קימרון (עיר סניף + הערה + בלי רחוב)' },
-      { type: 'fill', field: 'fee', expect: 25, focus: 'fee', noFast: true,
-        hint: 'הוסיפו ידנית «דמי משלוח 25» (לפי ה־Hub) ולחצו «הוספה להזמנה».',
-        check: 'הוספת דמי משלוח 25 לקימרון' }
+        html: noteBox('<b>כך רושמים קימרון:</b><ol class="attn-steps"><li><b>עיר</b> = בית שאן</li><li><b>«הוסיפו הערה»</b> = קימרון (ורחוב, אם יש)</li><li>✔ סמנו <b>«כתובת בלי מס׳ בית או רחוב»</b></li><li>לחצו <b>«המשך»</b></li></ol>'),
+        hint: 'בצעו את 4 הצעדים בטופס.', check: 'מילוי כתובת קימרון (עיר סניף + הערה + בלי רחוב)' },
+      { type: 'ask', hint: 'כמה מוסיפים ב«הוספת דמי משלוח» כדי שהסה״כ יהיה כמו דמי המשלוח של קימרון?',
+        html: noteBox('⚠️ <b>שימו לב:</b> כתובת בבית שאן כבר כוללת <b>₪20</b> דמי משלוח אוטומטית. לפי ה־Hub, דמי המשלוח לקימרון הם <b>₪25</b> — יותר.'),
+        tip: 'מוסיפים רק את ההפרש: ₪25 (קימרון) − ₪20 (כבר בבית שאן) = ₪5.', check: 'חישוב הפרש דמי המשלוח',
+        options: [ { t: '₪25' }, { t: '₪5', ok: true }, { t: '₪20' }, { t: '₪10' } ] },
+      { type: 'fill', field: 'fee', expect: 5, focus: 'fee', noFast: true, showFee: true,
+        hint: 'בחלון «הוספת דמי משלוח» בחרו <b>«דמי משלוח 5»</b> ולחצו «הוספה להזמנה».',
+        check: 'הוספת הפרש דמי המשלוח (₪5) לקימרון', badTip: 'מוסיפים רק את ההפרש: 25 − 20 = ₪5.' }
     ] },
 
   { label: 'שיחה 4', revealAt: 0, revealLabel: 'כתובת מזוהה',
@@ -975,20 +1064,20 @@ const SCENARIOS = [
         options: [
           { t: 'מסמנים «בלי מס׳ בית או רחוב» וכותבים הכול בהערה.' },
           { t: 'מעולה — חולון מזוהה. ארשום רחוב, מספר, דירה, קומה והערת כניסה לשליח.', ok: true },
-          { t: 'מוסיפים דמי משלוח 25 ידנית כמו בקימרון.' } ] },
+          { t: 'מוסיפים דמי משלוח ידנית כמו בקימרון.' } ] },
       { type: 'fill', field: 'recognized', focus: 'addr', noFast: true,
-        hint: 'מלאו רחוב (הפעמון), מספר (4), דירה (9), קומה (3) והערה (למשל קוד 1122) · «המשך».',
+        hint: 'מלאו בטופס: <b>רחוב</b> (הפעמון), <b>מס׳</b> (4), <b>דירה</b> (9), <b>קומה</b> (3), ובשדה <b>«הוסיפו הערה»</b> את הוראת הכניסה (קוד 1122) · «המשך».',
         check: 'מילוי כתובת מזוהה מלאה' }
     ] }
 ];
 
 const QUIZ = [
-  { title: 'כתובות שמורות', tip: 'מה עושים כשלקוח חוזר והפרטים התמלאו?', check: 'נוהל כתובות שמורות',
-    q: 'לקוח חוזר רוצה משלוח. מה הסדר הנכון?',
+  { title: 'כתובות שמורות', tip: 'מה עושים כשלקוח קיים והפרטים התמלאו?', check: 'נוהל כתובות שמורות',
+    q: 'לקוח קיים רוצה משלוח. מה הסדר הנכון?',
     options: [
       { t: 'מקלידים כתובת חדשה תמיד' },
-      { t: 'לוחצים «כתובות שמורות», שואלים אם זו הכתובת, בוחרים, מוודאים וממלאים חסר', ok: true },
-      { t: 'מדלגים ל«המשך» בלי כתובת' },
+      { t: 'לוחצים «כתובות שמורות», מקריאים ללקוח את הכתובות עד שהוא מאשר, בוחרים ומשלימים קומה / דירה / הערות', ok: true },
+      { t: 'בוחרים את הכתובת הראשונה ברשימה' },
       { t: 'מעבירים לסניף שייקח כתובת' } ] },
   { title: 'פרטי כניסה', tip: 'מה תמיד משלימים לשליח?', check: 'דירה / קומה / הוראות כניסה',
     q: 'אחרי שהכתובת התמלאה (שמורה או ידנית), מה חשוב לוודא?',
@@ -1004,12 +1093,12 @@ const QUIZ = [
       { t: 'עוצרים, בודקים ב־Agent Hub, ובכל מקרה אומרים דמי משלוח, זמן ומינימום', ok: true },
       { t: 'אומרים תמיד שאין משלוח' },
       { t: 'ממלאים את שם היישוב בעיר בלי בדיקה' } ] },
-  { title: 'קימרון', tip: 'איך רושמים מקום שמשלוחה לא מזהה?', check: 'עיר סניף + הערה + דמי משלוח ידניים',
-    q: 'קימרון (יש משלוח מבית שאן, משלוחה לא מזהה). מה עושים במסך?',
+  { title: 'קימרון', tip: 'איך רושמים מקום שמשלוחה לא מזהה, וכמה דמי משלוח מוסיפים?', check: 'עיר סניף + הערה + הפרש דמי משלוח',
+    q: 'קימרון (לפי ה־Hub: משלוח מבית שאן ₪25; משלוחה לא מזהה). מה עושים במסך?',
     options: [
       { t: 'עיר «קימרון» + רחוב מהרשימה' },
-      { t: 'עיר «בית שאן», הערה עם «קימרון», ✔ בלי מס׳ בית/רחוב אם אין, ואז «הוספת דמי משלוח» לפי ה־Hub (₪25)', ok: true },
-      { t: 'רק כתובת שמורה' },
+      { t: 'עיר «בית שאן», הערה «קימרון», ✔ בלי מס׳ בית/רחוב — ו«הוספת דמי משלוח» ₪25 מלאים' },
+      { t: 'עיר «בית שאן», הערה «קימרון», ✔ בלי מס׳ בית/רחוב — ו«הוספת דמי משלוח» של ההפרש בלבד: ₪25 − ₪20 שכבר נכללים = ₪5', ok: true },
       { t: 'מעבירים לסניף בית שאן שיקליד' } ] },
   { title: 'כתובת מזוהה', tip: 'מה ממלאים כשהעיר מזוהה?', check: 'רחוב + מספר + פרטי כניסה',
     q: 'העיר מזוהה (למשל חולון). איך ממשיכים?',
@@ -1340,7 +1429,40 @@ document.addEventListener('click', e => { const b = e.target.closest('.mh-sum');
 (function () { const hl = MOCK.highlight; MOCK.highlight = f => { hl(f); foldSections(f); }; })();
 (function () { const cb = document.getElementById('chatBody');
   if (cb && window.ResizeObserver) new ResizeObserver(() => { cb.scrollTop = cb.scrollHeight; }).observe(cb); })();
+const RING_ENABLED = true;
 
+/* Ringtone: synthesized ring (WebAudio) after user interaction, with mute.
+   To use the real call-center ring: put the file at assets/ring.mp3 next to this page — it is tried first. */
+const RING_URL = 'assets/ring.mp3';
+const Ring = (() => {
+  let ctx = null, timer = null, audio = null, useFile = null, on = false;
+  let muted = false; try { muted = localStorage.getItem('atzaAcademy.ringMuted') === '1'; } catch (e) {}
+  function tone() {
+    if (!ctx) return;
+    const t0 = ctx.currentTime, g = ctx.createGain();
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.1, t0 + .03); g.gain.setValueAtTime(.1, t0 + 1.0); g.gain.linearRampToValueAtTime(0, t0 + 1.1);
+    g.connect(ctx.destination);
+    [440, 480].forEach(fq => { const o = ctx.createOscillator(); o.frequency.value = fq; o.connect(g); o.start(t0); o.stop(t0 + 1.15); });
+  }
+  function synth() {
+    try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume(); } catch (e) { return; }
+    tone(); timer = setInterval(tone, 3000);
+  }
+  function start() {
+    stop(); on = true;
+    if (muted || !RING_ENABLED) return;
+    if (useFile === false) { synth(); return; }
+    try { audio = audio || new Audio(RING_URL); audio.loop = true; audio.currentTime = 0;
+      audio.play().then(() => { useFile = true; if (!on || muted) audio.pause(); }).catch(() => { useFile = false; audio = null; if (on && !muted) synth(); });
+    } catch (e) { useFile = false; synth(); }
+  }
+  function stop() { on = false; clearInterval(timer); timer = null; if (audio) try { audio.pause(); } catch (e) {} }
+  function toggle() { muted = !muted; try { localStorage.setItem('atzaAcademy.ringMuted', muted ? '1' : '0'); } catch (e) {}
+    if (muted) { const was = on; stop(); on = was; } else if (on) start(); return muted; }
+  return { start, stop, toggle, get muted() { return muted; }, get playing() { return !!timer || (!!audio && !audio.paused); } };
+})();
+function paintRingBtn() { const b = document.getElementById('ringBtn'); if (!b) return; b.hidden = !RING_ENABLED;
+  b.textContent = Ring.muted ? '🔕 צלצול כבוי · הפעלה' : '🔔 צלצול פועל · השתקה'; b.setAttribute('aria-pressed', Ring.muted ? 'true' : 'false'); }
 /* caller number for the softphone popup: from the scenario's phone turn or its prefilled details */
 function callerOf(sc) {
   if (sc.caller) return sc.caller;
@@ -1361,12 +1483,13 @@ function toast(t) { const el = document.getElementById('copyToast'); if (!el) re
 function pulseChat() { const el = document.getElementById('chatPanel'); if (!el) return; el.classList.remove('chat-pulse'); void el.offsetWidth; el.classList.add('chat-pulse'); }
 function okHtml(n, more) {
   const a = ALL[n - 1];
-  if (a && a.kind === 'turn' && a.t.type === 'say') {
+  if (a && a.kind === 'turn' && (a.t.type === 'say' || a.t.type === 'ask')) {
     const nx = ALL[n];
-    const reply = nx && nx.kind === 'turn' && nx.si === a.si && nx.t.cust;
-    if (reply) { nx.custShown = true; setTimeout(() => { pushChat('cust', nx.t.cust); pulseChat(); }, 650); }
-    else pulseChat();
-    return '<span class="ok-mark">✓ נכון!</span> <span class="ok-next">— ' + (reply ? 'הלקוח ענה בחלון «שיחה עם הלקוח» ⬆' : 'התשובה שלך מופיעה בחלון «שיחה עם הלקוח» ⬆') + '</span>';
+    const reply = nx && nx.kind === 'turn' && nx.si === a.si && (nx.t.cust || nx.t.pre);
+    if (reply) { nx.custShown = true; setTimeout(() => { (nx.t.pre || []).forEach(([w, x]) => pushChat(w, x)); if (nx.t.cust) pushChat('cust', nx.t.cust); pulseChat(); }, 650); }
+    else if (a.t.type === 'say') pulseChat();
+    if (reply) return '<span class="ok-mark">✓ נכון!</span> <span class="ok-next">— ' + (nx.t.cust ? 'הלקוח ענה בחלון «שיחה עם הלקוח» ⬆' : 'השיחה ממשיכה בחלון «שיחה עם הלקוח» ⬆') + '</span>';
+    if (a.t.type === 'say') return '<span class="ok-mark">✓ נכון!</span> <span class="ok-next">— התשובה שלך מופיעה בחלון «שיחה עם הלקוח» ⬆</span>';
   }
   return '<span class="ok-mark">✓ נכון!</span> <span class="ok-next">' + (more ? 'ממשיכים…' : 'סיימתם את כל התרגיל.') + '</span>';
 }
@@ -1416,8 +1539,10 @@ function goTurn(n) {
     ov.hidden = false;
     const btn = document.getElementById('callAnswer');
     setTimeout(() => btn.focus(), 50);
+    const rb = document.getElementById('ringBtn'); if (rb) { paintRingBtn(); rb.onclick = () => { Ring.toggle(); paintRingBtn(); }; }
+    Ring.start();
     btn.onclick = () => {
-      btn.onclick = null; ov.hidden = true;
+      btn.onclick = null; ov.hidden = true; Ring.stop();
       startTurn(n);
       flashReset();
     };
@@ -1445,16 +1570,25 @@ function activateTurn(n) {
     if (sc.setup) sc.setup();
     pushChat('sys', '📞 שיחה חדשה!');
     if (sc.customerOpen) pushChat('cust', sc.customerOpen);
+    (sc.preChat || []).forEach(([w, x]) => pushChat(w, x));
   }
+  if (t.pre && !a.custShown) t.pre.forEach(([w, x]) => pushChat(w, x));
   if (t.cust && !a.custShown) { pushChat('cust', t.cust); pulseChat(); }
+  if (t.showFee) MOCK.set('showFee', true);
+  const sm = document.getElementById('savedModal');
+  if (sm) sm.hidden = !(t.focus === 'saved' && (t.field === 'pickSaved' || t.type === 'ask'));
   const hint = document.getElementById('hint' + n);
   if (t.cust && hint && !document.getElementById('cn' + n)) hint.insertAdjacentHTML('beforebegin', '<p class="cust-note" id="cn' + n + '">💬 הלקוח ענה — ראו בחלון «שיחה עם הלקוח» ⬆</p>');
   const opts = document.getElementById('opts' + n);
-  if (t.type === 'say') {
+  const xb = document.getElementById('xh' + n);
+  if (t.html && !xb) hint.insertAdjacentHTML('beforebegin', '<div class="turn-x" id="xh' + n + '">' + t.html + '</div>');
+  if (t.type === 'say' || t.type === 'ask') {
     hint.textContent = t.hint || 'בחרו מה לענות ללקוח:';
+    hint.classList.toggle('turn-q', !!t.hint);
     opts.innerHTML = t.options.map((o, k) =>
       `<button type="button" class="opt-btn" data-s="${n}" data-o="${k}"><span class="opt-mark"></span><span>${esc(o.t)}</span></button>`).join('');
   } else if (t.type === 'fill') {
+    hint.classList.remove('turn-q');
     hint.innerHTML = t.hint || 'הזינו / לחצו במסך ההזמנות למעלה.';
     opts.innerHTML = '';
     if (t.prep) t.prep(n);
@@ -1487,11 +1621,11 @@ document.addEventListener('click', e => {
     return;
   }
   const t = a.t;
-  if (t.type !== 'say') return;
+  if (t.type !== 'say' && t.type !== 'ask') return;
   if (t.options[k].ok) {
     opt.classList.add('opt-right');
     all.forEach(b => { b.disabled = true; });
-    pushChat('agent', t.options[k].t);
+    if (t.type === 'say') pushChat('agent', t.options[k].t);
     if (t.onOk) t.onOk();
     stationPass(n, t.options[k].t);
   } else {
@@ -1569,6 +1703,7 @@ startLesson();
       <div class="call-ringrow"><div class="call-phone" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span><span class="icon">☎️</span></div>
         <h2 class="call-title" id="callTitle">שיחה חדשה נכנסת!</h2></div>
       <p class="call-count" id="callCount"></p>
+      <button type="button" class="ring-btn" id="ringBtn" hidden aria-pressed="false"></button>
     </div>
     <div class="inc-win" aria-label="SquareTalk Incoming Call (סימולטור)">
       <div class="inc-title"><span>Incoming Call</span><button type="button" class="inc-x" id="callX" aria-label="סגירה">✕</button></div>

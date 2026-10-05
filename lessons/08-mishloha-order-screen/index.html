@@ -57,7 +57,7 @@ h1.main-title .st{color:var(--brand)}
 /* sticky stage — NO overflow on sticky itself (overflow breaks position:sticky).
    Cap height on .mock-panel so the active question below stays on screen. */
 .sim-stage{position:sticky;top:0;z-index:20;margin:.25rem 0 .4rem;padding:.2rem 0 .25rem;background:linear-gradient(180deg,rgba(244,246,249,.98) 80%,rgba(244,246,249,.9));}
-.mock-panel{background:#fff;border:1px solid #d1d5db;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.06);overflow:hidden;max-height:min(340px,38vh);display:flex;flex-direction:column}
+.mock-panel{background:#fff;border:1px solid #d1d5db;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.06);overflow:hidden;max-height:38vh;display:flex;flex-direction:column}
 .mock-head{background:#374151;color:#f9fafb;padding:.28rem .65rem;font-size:.78rem;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex:0 0 auto}
 .mock-head .tag{background:#4b5563;padding:.08rem .4rem;border-radius:999px;font-size:.68rem;font-weight:600}
 .mock-body{padding:0;background:#f3f4f6;flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden}
@@ -67,7 +67,7 @@ h1.main-title .st{color:var(--brand)}
 .os{display:grid;grid-template-columns:minmax(190px,220px) 1fr minmax(160px,190px);gap:0;min-height:0;background:#f3f4f6;font-size:.78rem;direction:ltr}
 .os-left,.os-center,.os-right{direction:rtl}
 @media(max-width:900px){
-  .mock-panel{max-height:min(280px,34vh)}
+  .mock-panel{max-height:34vh}
   .os{grid-template-columns:1fr;min-height:0}
   .os-right{order:1} /* search first when stacked */
   .os-center{order:2}

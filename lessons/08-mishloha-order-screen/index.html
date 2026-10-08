@@ -87,6 +87,9 @@ h1.main-title .st{color:var(--brand)}
 .opt-btn.opt-wrong .opt-mark{background:#dc2626;border-color:#dc2626;color:#fff}
 .opt-btn.opt-wrong .opt-mark::after{content:"✗"}
 .opt-btn:disabled{cursor:default}
+.opt-ul{flex:1;min-width:0;margin:0;padding:0;padding-inline-start:.95rem;list-style:disc;display:flex;flex-direction:column;gap:1px;font-size:.86rem;line-height:1.35}
+.opt-btn:has(.opt-ul){padding:.45rem .6rem}
+.opt-ul li::marker{color:#94a3b8}
 .ag-warn{margin-top:.6rem;padding:.7rem .9rem;border-radius:10px;background:#fff7ed;border:2px solid #f97316;color:#9a3412;font-size:.92rem;line-height:1.5}
 .ag-warn.unlocked{background:#f0f9ff;border-color:#38bdf8;color:#075985}
 .ag-warn[hidden],.ag-fast[hidden]{display:none!important}
@@ -574,8 +577,8 @@ const STATIONS = [
   { id:'summary', type:'mc', title:'פירוט הזמנה', focus:['cart'],
     q:'הלקוח סיים לבחור מנות. מה עושים עם «פירוט הזמנה» שמשמאל?',
     options:[
-      { t:'עוברים עם הלקוח על כל מנה שנבחרה — מה יש בכל מנה ואילו שינויים עשינו בה — ומוודאים איתו שההזמנה שלקחנו נכונה', ok:true },
       { t:'מקריאים ללקוח רק את שמות המנות — השינויים כבר שמורים במערכת ואין צורך לחזור עליהם' },
+      { t:'עוברים עם הלקוח על כל מנה שנבחרה — מה יש בכל מנה ואילו שינויים עשינו בה — ומוודאים איתו שההזמנה שלקחנו נכונה', ok:true },
       { t:'שואלים את הלקוח אם הוא זוכר מה הזמין — ואם הוא לא מתקן, ממשיכים' },
       { t:'עוברים רק על המנות שעשינו בהן שינויים — את השאר הלקוח כבר יודע' }
     ],
@@ -583,9 +586,9 @@ const STATIONS = [
   { id:'chop', type:'mc', title:'צ׳ופסטיקס וסכו״ם', focus:['eco'],
     q:'הלקוח לא אמר כלום על צ׳ופסטיקס או סכו״ם. מה עושים?',
     options:[
-      { t:'שואלים אם הוא רוצה צ׳ופסטיקס. סכו״ם חד״פ לא מציעים כי הוא יקר — מוסיפים רק אם הלקוח מבקש', ok:true },
       { t:'שואלים אם הוא רוצה צ׳ופסטיקס או סכו״ם, ומוסיפים מה שהוא בוחר' },
       { t:'מוסיפים צ׳ופסטיקס וסכו״ם לכל סועד, ליתר ביטחון' },
+      { t:'שואלים אם הוא רוצה צ׳ופסטיקס. סכו״ם חד״פ לא מציעים כי הוא יקר — מוסיפים רק אם הלקוח מבקש', ok:true },
       { t:'לא שואלים כלום — מי שצריך יבקש בעצמו' }
     ],
     tipWrong:'קראו את ההודעה הירוקה מעל סכו״ם וצ׳ופסטיקס במסך — ונזכרו מה יקר לסניף.' },
@@ -599,14 +602,14 @@ const STATIONS = [
     ],
     tipWrong:'הסתכלו ברשימה מימין, מתחת לחיפוש.' },
   { id:'continue', type:'mc', title:'לפני «המשך»', focus:['continue'],
-    q:'עברתם עם הלקוח על המנות. מה עושים עכשיו, לפני שלוחצים «המשך»?',
+    q:'עברתם עם הלקוח על המנות. מה עושים לפני «המשך»?',
     options:[
-      { t:'שואלים אם הוא רוצה צ׳ופסטיקס (סכו״ם רק אם ביקש) ← בודקים כמות רטבים ועוברים איתו על הרטבים ← אומרים לו את הסכום הכולל: «זה עולה X כולל דמי משלוח» ← «המשך»', ok:true },
-      { t:'שואלים אם הוא רוצה צ׳ופסטיקס וסכו״ם ← בודקים כמות רטבים ועוברים איתו על הרטבים ← אומרים לו «זה עולה X כולל דמי משלוח» ← «המשך»' },
-      { t:'שואלים אם הוא רוצה צ׳ופסטיקס (סכו״ם רק אם ביקש) ← אומרים לו «זה עולה X כולל דמי משלוח» ← «המשך» — הרטבים מצטרפים לבד לפי המנות' },
-      { t:'שואלים אם הוא רוצה צ׳ופסטיקס (סכו״ם רק אם ביקש) ← בודקים כמות רטבים ועוברים איתו על הרטבים ← «המשך» — את הסכום הוא יראה בהודעה שתגיע אליו' }
+      { b:['שואלים אם רוצה צ׳ופסטיקס (סכו״ם רק אם ביקש)','עוברים על כמות הרטבים','אומרים עלות כוללת כולל דמי משלוח','לוחצים «המשך»'], ok:true },
+      { b:['שואלים אם רוצה צ׳ופסטיקס וסכו״ם','עוברים על כמות הרטבים','אומרים עלות כוללת כולל דמי משלוח','לוחצים «המשך»'] },
+      { b:['שואלים אם רוצה צ׳ופסטיקס (סכו״ם רק אם ביקש)','מדלגים על הרטבים','אומרים עלות כוללת כולל דמי משלוח','לוחצים «המשך»'] },
+      { b:['שואלים אם רוצה צ׳ופסטיקס (סכו״ם רק אם ביקש)','עוברים על כמות הרטבים','אומרים רק את מחיר המנות','לוחצים «המשך»'] }
     ],
-    tipWrong:'לפני «המשך» יש שלושה דברים: צ׳ופסטיקס (בלי להציע סכו״ם), רטבים, וסכום כולל עם דמי משלוח.' },
+    tipWrong:'לפני «המשך»: צ׳ופסטיקס (בלי להציע סכו״ם), רטבים, ועלות כוללת עם דמי משלוח.' },
   /* quiz */
   { id:'q1', type:'mc', quiz:true, title:'לוגו אצה',
     q:'למה משמש לוגו אצה בראש מסך ההזמנות?',
@@ -615,8 +618,8 @@ const STATIONS = [
   { id:'q2', type:'mc', quiz:true, title:'חיפוש חלקי',
     q:'הלקוח מבקש שניצל. מה נכון לגבי החיפוש?',
     options:[
-      { t:'חייבים להקליד את כל השם בדיוק, אחרת אין תוצאות' },
       { t:'אפשר להקליד רק חלק מהשם — הרשימה מסתננת עד שמופיעה המנה', ok:true },
+      { t:'חייבים להקליד את כל השם בדיוק, אחרת אין תוצאות' },
       { t:'החיפוש עובד רק באנגלית' },
       { t:'החיפוש מוצא רק קטגוריות, לא מנות' }
     ],
@@ -634,16 +637,25 @@ const STATIONS = [
     q:'למה רטבים חשובים כל כך בהזמנה? (פירוט מלא — בהדרכה ייעודית)',
     options:[
       { t:'רטבים הם אופציונליים לגמרי ואף פעם לא שואלים' },
-      { t:'רטבים רלוונטיים רק לאיסוף עצמי' },
       { t:'בלי רטבים (למשל סויה / ספייסי מיונז) הלקוח מתפוצץ — זה הורס לו את המנה · לכן זה קריטי ולא מדלגים', ok:true },
+      { t:'רטבים רלוונטיים רק לאיסוף עצמי' },
       { t:'מוסיפים תמיד את כל הרטבים בלי לשאול' }
     ],
     tipWrong:'נזכרו במה שנאמר על רטבים — גם אם ההדרכה המלאה עוד לפניכם.' }
 ];
 
-/* Shuffle MC options once per page load (Fisher–Yates) — correct answer is not always first. Grading uses ok:true. */
+/* Answer shuffle (skill standard): Fisher–Yates per question at every page load, PLUS balanced
+   correct-answer positions across the lesson — positions are dealt in shuffled blocks of 0..k-1,
+   so every position is used evenly and two consecutive questions never share the correct slot.
+   Grading uses ok:true, so order is irrelevant. Source order is varied too (no-JS fallback). */
 function shuffleOptions(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-STATIONS.forEach(st=>{ if(st.options&&st.options.length>1) st.options=shuffleOptions(st.options); });
+function balancedTargets(n,k){ const out=[]; while(out.length<n){ let blk; do{ blk=shuffleOptions([...Array(k).keys()]); }while(out.length&&blk[0]===out[out.length-1]); out.push(...blk); } return out.slice(0,n); }
+(function(){
+  const mcs=STATIONS.filter(st=>st.options&&st.options.length>1);
+  mcs.forEach(st=>st.options.forEach(o=>{ if(o.b&&!o.t) o.t=o.b.join(' · '); }));
+  const k=Math.min(...mcs.map(st=>st.options.length)), tg=balancedTargets(mcs.length,k);
+  mcs.forEach((st,i)=>{ const a=shuffleOptions(st.options), ci=a.findIndex(o=>o.ok), t=tg[i]; [a[ci],a[t]]=[a[t],a[ci]]; st.options=a; });
+})();
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 const TOTAL = STATIONS.length;
@@ -745,7 +757,7 @@ function renderActive(){
   const isMc=st.type==='mc';
   let h='<section class="qcard" id="station'+n+'"><div class="qhead"><span class="qnum">'+numLabel(n)+'</span><span class="qtitle">'+(st.quiz?'חידון · ':'')+esc(st.title)+'</span></div>';
   if(isMc){
-    h+='<div class="qscen mc">'+esc(st.q)+'</div><div class="opt-col">'+st.options.map((o,k)=>'<button type="button" class="opt-btn" data-o="'+k+'"><span class="opt-mark"></span><span>'+esc(o.t)+'</span></button>').join('')+'</div>';
+    h+='<div class="qscen mc">'+esc(st.q)+'</div><div class="opt-col">'+st.options.map((o,k)=>'<button type="button" class="opt-btn" data-o="'+k+'"><span class="opt-mark"></span>'+(o.b?'<ul class="opt-ul">'+o.b.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'<span>'+esc(o.t)+'</span>')+'</button>').join('')+'</div>';
   }else{
     h+='<div class="qscen">'+esc(st.scenario)+'</div>'+(st.explain?'<p class="qexpl">'+esc(st.explain)+'</p>':'')+
       '<div class="qtask"><div class="qtask-h">מה עושים במסך ההזמנות:</div><ol class="qsteps" id="steps'+n+'">'+st.steps.map((s,i)=>'<li>'+esc(s.text)+'</li>').join('')+'</ol></div>';
@@ -831,7 +843,11 @@ AG.init({ lessonId:LESSON_ID, total:TOTAL,
   zones:n=>[document.getElementById('station'+n),document.getElementById('ordersSim')],
   onLock:()=>sim.root.classList.add('ag-locked'),
   onUnlock:()=>sim.root.classList.remove('ag-locked') });
-renderChips(); renderActive(); AG.activate(1); applyTargets();
+/* Sticky question column: if it is taller than the window, use a negative top so its bottom stays reachable. */
+function fitSticky(){ const q=document.getElementById('qCol'); if(!q) return; const h=q.offsetHeight; q.style.top=Math.min(12, window.innerHeight-h-12)+'px'; }
+window.addEventListener('resize',fitSticky);
+if(window.ResizeObserver) new ResizeObserver(fitSticky).observe(document.getElementById('qCol'));
+renderChips(); renderActive(); AG.activate(1); applyTargets(); fitSticky();
 window.__lesson={sim,STATIONS,get current(){return current;},get stepIdx(){return stepIdx;}};
 
 </script>

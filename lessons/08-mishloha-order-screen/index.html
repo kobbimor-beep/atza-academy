@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- atza-lesson8 v4 · orders-sim component v4 -->
+<!-- atza-lesson8 v5 · orders-sim component v5 -->
 <title>אצה · הדרכה 8 · מסך ההזמנות · אתר הזמנות משלוחה</title>
 <style>
 :root{--bg:#f4f6f9;--card:#fff;--ink:#1c2430;--muted:#64748b;--line:#e2e8f0;--brand:#c41230;--accent:#1e3a5f;
@@ -43,6 +43,9 @@ h1.main-title .st{color:var(--brand)}
 .sim-col{min-width:0}
 @media(max-width:1000px){.practice{grid-template-columns:1fr}.q-col{position:static}}
 
+.col-label{display:flex;align-items:center;gap:7px;height:30px;margin-bottom:8px;font-size:.92rem;font-weight:800;color:#1e3a5f;letter-spacing:.01em}
+.col-label .ic{width:22px;height:22px;border-radius:6px;background:#1e3a5f;color:#fff;font-size:.8rem;display:inline-flex;align-items:center;justify-content:center}
+.sim-label .ic{background:#ED1556}
 .q-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px}
 .q-chip{min-width:28px;height:26px;padding:0 7px;border-radius:999px;background:#f1f5f9;color:#94a3b8;font-size:.75rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:3px}
 .q-chip.done{background:var(--ok-bg);color:var(--ok)}
@@ -103,7 +106,7 @@ h1.main-title .st{color:var(--brand)}
 .next-lesson-note{font-size:.8rem;color:var(--muted)}
 footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 
-/* ===== Atza Academy · Mishloha orders-screen simulator (reusable) · v4 =====
+/* ===== Atza Academy · Mishloha orders-screen simulator (reusable) · v5 =====
    Colors sampled from Kobbi's real screenshots (Oct 2026):
    banner #BFBFBF + faint white flowers · brand text #52493E · pink #ED1556
    prev-orders bar #F1F1ED · white cards with soft shadow · thin beige separators.
@@ -149,6 +152,7 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 .osim-card.pink-top{border-top:3px solid var(--os-pink)}
 .osim-coupon{display:flex;justify-content:space-between;align-items:center;padding:16px 14px;margin-top:12px;font-weight:800;font-size:15px}
 .osim-coupon a{color:#222;text-decoration:underline;text-decoration-color:var(--os-pink);text-underline-offset:4px;font-weight:800;font-size:14px}
+.osim-cathead .rico{vertical-align:-2px;margin-left:6px;opacity:.6}
 .osim-cathead{padding:16px 14px;margin-top:12px;font-weight:800;font-size:16px}
 .osim-empty{padding:18px;margin-top:12px;color:var(--os-muted);text-align:center}
 .osim-dish{position:relative;display:grid;grid-template-columns:130px minmax(0,1fr);gap:14px;padding:14px;margin-top:12px;min-height:114px}
@@ -161,7 +165,8 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 .osim-crown{display:inline-flex;width:15px;height:15px;border-radius:50%;background:#f28c28;color:#fff;font-size:9px;align-items:center;justify-content:center;margin-left:3px}
 .osim-dish .ds{color:#777;font-size:12.5px;margin-top:3px}
 .osim-dish .opts{margin-top:4px;font-size:12.5px;color:#444;display:flex;gap:10px;flex-wrap:wrap}
-.osim-dish .pr{margin-top:4px;font-weight:800;color:#333}
+.osim-dish .pr{position:absolute;left:14px;top:14px;font-weight:800;font-size:15px;color:#333}
+.osim-dish .info{padding-left:56px}
 .osim-add{position:absolute;left:12px;bottom:12px;background:#fff;border:1px solid #d9d9d9;border-radius:4px;padding:4px 10px;font-weight:700;font-size:12.5px;color:#333}
 .osim-add:hover{border-color:var(--os-pink);color:var(--os-pink)}
 
@@ -196,8 +201,18 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 .osim-cart{margin-top:12px;padding:22px 14px;text-align:center;color:#aaa}
 .osim-cart .empty{margin-top:8px;font-size:13.5px}
 .osim-cart.has{text-align:right;color:#222;padding:12px 14px}
-.osim-cart .h{font-weight:800;font-size:15px;margin-bottom:6px}
-.osim-cart .line{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.osim-cart .h{display:flex;justify-content:space-between;align-items:baseline;font-weight:800;font-size:15px;margin-bottom:4px}
+.osim-cart .h .cnt{font-size:12px;font-weight:600;color:#8b8b8b}
+.osim-line{padding:8px 0;border-bottom:1px solid #eee;font-size:13px;border-radius:4px}
+.osim-line .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.osim-line .mods{color:#666;font-size:12px;margin-top:2px}
+.osim-line .note{color:#B45309;font-size:12px;margin-top:2px}
+.osim-line .l3{display:flex;justify-content:space-between;align-items:center;margin-top:5px}
+.osim-line .rm{background:none;border:0;color:#8b8b8b;font-size:12px;text-decoration:underline;padding:0}
+.osim-line .rm:hover{color:var(--os-pink)}
+.osim-line.is-new{animation:osimNew 2.6s ease-out forwards}
+@keyframes osimNew{0%,35%{background:#FFF1C2;box-shadow:0 0 0 4px #FFF1C2}100%{background:transparent;box-shadow:0 0 0 4px transparent}}
+.osim-ctr.sm button{width:20px;height:20px;font-size:12px}
 .osim-cart .tot{margin-top:8px;font-size:13px}
 .osim-cart .tot div{display:flex;justify-content:space-between;padding:2px 0}
 .osim-cart .tot .sum{font-weight:900;font-size:15px}
@@ -270,11 +285,12 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 <h2 class="practice-title" id="practice">תרגול במסך ההזמנות</h2>
 <div class="practice">
   <aside class="q-col" id="qCol" aria-label="שאלות">
+    <div class="col-label q-label" id="qLabel"><span class="ic">?</span>שאלות</div>
     <div class="q-chips" id="qChips"></div>
     <div id="activeSlot"></div>
     <div class="complete-banner" id="completeBanner">
       <h2>כל הכבוד — סיימתם את מסך ההזמנות!</h2>
-      <p>תרגלתם לוגו ← פרטי לקוח, חיפוש מנה, הזמנות קודמות, פירוט הזמנה ו«המשך».</p>
+      <p>תרגלתם לוגו ← פרטי לקוח, חיפוש והוספת מנה, הזמנות קודמות, פירוט הזמנה ו«המשך».</p>
       <div class="flag-summary" id="flagSummary"></div>
       <div class="next-lesson-wrap">
         <button type="button" class="next-lesson-btn is-disabled" id="nextLessonBtn" disabled>לשיעור הבא</button>
@@ -282,19 +298,20 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
       </div>
     </div>
   </aside>
-  <div class="sim-col"><div id="ordersSim" aria-label="מסך הזמנות משלוחה (סימולטור)"></div></div>
+  <div class="sim-col"><div class="col-label sim-label" id="simLabel"><span class="ic">▣</span>סימולטור — מסך הזמנות</div><div id="ordersSim" aria-label="מסך הזמנות משלוחה (סימולטור)"></div></div>
 </div>
 <footer>אקדמיית אצה · משלוחה · הדרכה 8 · מסך ההזמנות · סימולטור</footer>
 
 <script>
-/* ===== Atza Academy · OrdersSim v4 — reusable Mishloha orders-screen simulator =====
+/* ===== Atza Academy · OrdersSim v5 — reusable Mishloha orders-screen simulator =====
    const sim = OrdersSim.mount(el, {logo, branch, agent:{name,email}, customer:{phone,first,last},
                  categories:[...], dishes:[{id,cat,name,desc,price,popular,opts}], prevOrders:[{id,date,count,total,items:[dish]}],
                  orderType:'delivery'|'pickup', etaDelivery, etaPickup, deliveryFee, minOrder});
    sim.on(evt, fn)   evts: logo, backToOrder, search(q,results), searchClear, category(name), add(dish),
-                           prevOpen, prevShow(id), prevHide(id), prevAdd(item), prevBack, type(t), disp(kind,val), continue, coupon
+                           prevOpen, prevShow(id), prevHide(id), prevAdd(item), prevBack, type(t), disp(kind,val), cartQty(name,qty), cartRemove(name), continue, coupon
    sim.setTargets(['logo'])   pulsing glow on [data-target] keys:
-        logo, backToOrder, search, searchClear, cats, prevBar, prevShow, prevAdd, prevBack, cart, eco, continue
+        logo, backToOrder, search, searchClear, cats, prevBar, prevShow, prevAdd, prevBack, cart, eco, continue, add:<dishId>
+   sim.addToCart(item) / sim.undoLast()  — cart line items {name,price,qty,opts[],note}; identical items merge into qty
    sim.state  (view: 'menu'|'prev'|'customer', search, cat, cart, openOrder, orderType, cutlery, chopsticks)  */
 (function(){
 'use strict';
@@ -311,7 +328,12 @@ var DEFAULTS={logo:'',branch:'',agent:{name:'',email:''},customer:{phone:'',firs
 
 function mount(root,opts){
   var o=Object.assign({},DEFAULTS,opts||{});
-  var st={view:'menu',search:'',cat:o.categories[0],cart:[],openOrder:null,orderType:o.orderType,cutlery:0,chopsticks:0};
+  var st={view:'menu',search:'',cat:o.categories[0],cart:[],openOrder:null,orderType:o.orderType,cutlery:0,chopsticks:0,lastKey:null,lastAt:0};
+  function itemKey(it){return it.name+'|'+(it.opts||[]).join(',')+'|'+(it.note||'');}
+  function addToCart(it){var k=itemKey(it),ex=null;st.cart.forEach(function(c){if(c.key===k)ex=c;});
+    if(ex)ex.qty++;else st.cart.push({key:k,name:it.name,price:it.price||0,qty:1,opts:(it.opts||[]).slice(),note:it.note||''});
+    st.lastKey=k;st.lastAt=Date.now();}
+  function undoLast(){if(!st.lastKey)return;for(var i=0;i<st.cart.length;i++){var c=st.cart[i];if(c.key===st.lastKey){if(c.qty>1)c.qty--;else st.cart.splice(i,1);break;}}st.lastKey=null;render();}
   var hs={},targets=[],api;
   function emit(ev){var a=[].slice.call(arguments,1);(hs[ev]||[]).forEach(function(f){f.apply(null,a);});}
   function T(k){return k&&targets.indexOf(k)>=0?' osim-pulse':'';}
@@ -322,14 +344,14 @@ function mount(root,opts){
   function findOrder(id){for(var i=0;i<o.prevOrders.length;i++)if(o.prevOrders[i].id===id)return o.prevOrders[i];return null;}
 
   function dishCard(d,x){x=x||{};
+    if(!x.target&&!x.act&&d.id)x.target='add:'+d.id;
     var tgt=x.target?' data-target="'+x.target+'"':'';
     return '<div class="osim-card osim-dish"><span class="osim-heart">'+ICON.heart+'</span>'+
       '<div class="img"><img src="'+o.logo+'" alt=""></div><div class="info"><div class="nm">'+esc(d.name)+'</div>'+
       (d.popular?'<div class="pop"><span class="osim-crown">♛</span>פופולארי</div>':'')+
       (d.desc?'<div class="ds">'+esc(d.desc)+'</div>':'')+
       (d.opts?'<div class="opts">'+d.opts.map(function(t){return '<span>+ '+esc(t)+'</span>';}).join('')+'</div>':'')+
-      (d.price!=null?'<div class="pr">'+money(d.price)+'</div>':'')+
-      '</div><button type="button" class="osim-add'+T(x.target)+'" data-act="'+(x.act||'add')+'" data-v="'+esc(x.v!=null?x.v:d.id)+'"'+tgt+'>+ '+esc(x.btn||'הוסף')+'</button></div>';
+      '</div>'+(d.price!=null?'<div class="pr">'+money(d.price)+'</div>':'')+'<button type="button" class="osim-add'+T(x.target)+'" data-act="'+(x.act||'add')+'" data-v="'+esc(x.v!=null?x.v:d.id)+'"'+tgt+'>+ '+esc(x.btn||'הוסף')+'</button></div>';
   }
   function bannerHTML(){
     return '<div class="osim-banner"><button type="button" class="osim-logo'+T('logo')+'" data-act="logo" data-target="logo" title="חזרה לפרטי לקוח" aria-label="לוגו אצה — חזרה לפרטי לקוח"><img src="'+o.logo+'" alt="אצה"></button>'+
@@ -361,7 +383,7 @@ function mount(root,opts){
     c+='<button type="button" class="osim-prevbar'+T('prevBar')+'" data-act="prevOpen" data-target="prevBar">'+ICON.rocket+'<span>הזמנות קודמות</span></button>';
     c+='<div class="osim-card pink-top osim-coupon"><span>יש לך קופון?</span><a href="#" data-act="coupon">לחץ כאן</a></div>';
     var res=results(),list=res!==null?res:o.dishes.filter(function(d){return d.cat===st.cat;});
-    c+='<div class="osim-card pink-top osim-cathead">'+(res!==null?'תוצאות חיפוש':esc(st.cat))+'</div>';
+    c+='<div class="osim-card pink-top osim-cathead">'+(res!==null?ICON.search.replace('class="ico"','class="rico"')+'תוצאות עבור: '+esc(st.search.trim()):esc(st.cat))+'</div>';
     if(!list.length) c+='<div class="osim-card osim-empty">לא נמצאו מנות</div>';
     list.forEach(function(d){c+=dishCard(d);});
     return c+'</div>';
@@ -378,14 +400,22 @@ function mount(root,opts){
       '<button type="button" data-act="type" data-v="pickup" class="'+(del?'':'on')+'">איסוף</button></div>'+
       '<div class="eta"><span>'+(del?'זמן משלוח':'זמן לאיסוף')+'</span><span>'+esc(del?o.etaDelivery:o.etaPickup)+'</span></div>'+
       (del?'<div class="eta"><span>דמי משלוח · מינימום</span><span>₪'+o.deliveryFee+' · ₪'+o.minOrder+'</span></div>':'')+'</div>';
-    var sub=st.cart.reduce(function(a,i){return a+(i.price||0);},0),fee=del?o.deliveryFee:0;
+    var sub=st.cart.reduce(function(a,i){return a+(i.price||0)*i.qty;},0),fee=del?o.deliveryFee:0,cnt=st.cart.reduce(function(a,i){return a+i.qty;},0);
     if(!st.cart.length){
       l+='<div class="osim-card osim-cart'+T('cart')+'" data-target="cart">'+ICON.cart+'<div class="empty">הוסיפו פריטים להזמנה</div></div>';
     }else{
-      l+='<div class="osim-card osim-cart has'+T('cart')+'" data-target="cart"><div class="h">פירוט הזמנה</div>';
-      st.cart.forEach(function(it){l+='<div class="line"><span>'+esc(it.name)+'</span><span>'+money(it.price||0)+'</span></div>';});
-      l+='<div class="tot"><div><span>מחיר מנות</span><span>₪'+sub+'</span></div>'+(fee?'<div><span>דמי משלוח</span><span>₪'+fee+'</span></div>':'')+
-        '<div class="sum"><span>סה״כ</span><span>₪'+(sub+fee)+'</span></div></div>'+
+      l+='<div class="osim-card osim-cart has'+T('cart')+'" data-target="cart"><div class="h"><span>פירוט הזמנה</span><span class="cnt">'+cnt+' מנות</span></div><div class="osim-lines">';
+      st.cart.forEach(function(it){
+        var age=Date.now()-st.lastAt,isNew=it.key===st.lastKey&&age<2600;
+        l+='<div class="osim-line'+(isNew?' is-new':'')+'"'+(isNew?' style="animation-delay:-'+age+'ms"':'')+'>'+
+          '<div class="l1"><span class="nm">'+esc(it.name)+'</span><span class="pr">'+money((it.price||0)*it.qty)+'</span></div>'+
+          (it.opts&&it.opts.length?'<div class="mods">'+it.opts.map(function(t){return '+ '+esc(t);}).join(' · ')+'</div>':'')+
+          (it.note?'<div class="note">הערה: '+esc(it.note)+'</div>':'')+
+          '<div class="l3"><span class="osim-ctr sm"><button type="button" data-act="qty" data-v="'+esc(it.key)+'" data-d="1" aria-label="הוספת כמות">+</button><b>'+it.qty+'</b><button type="button" data-act="qty" data-v="'+esc(it.key)+'" data-d="-1" aria-label="הורדת כמות">-</button></span>'+
+          '<button type="button" class="rm" data-act="remove" data-v="'+esc(it.key)+'">הסרה ✕</button></div></div>';
+      });
+      l+='</div><div class="tot"><div><span>מחיר מנות</span><span>₪'+sub+'</span></div>'+(fee?'<div><span>דמי משלוח</span><span>₪'+fee+'</span></div>':'')+
+        '<div class="sum"><span>סה״כ לתשלום</span><span>₪'+(sub+fee)+'</span></div></div>'+
         '<button type="button" class="osim-continue'+T('continue')+'" data-act="continue" data-target="continue">המשך</button></div>';
     }
     l+='<div class="osim-card osim-eco'+T('eco')+'" data-target="eco"><div class="msg"><span>עזרו לנו להפוך את העולם לירוק יותר - הוסיפו חד״פ רק אם אתם ממש צריכים</span><span class="osim-leaf"></span></div>'+
@@ -415,13 +445,15 @@ function mount(root,opts){
       case 'backToOrder':st.view='menu';render();emit('backToOrder');break;
       case 'searchClear':st.search='';render();emit('searchClear');break;
       case 'cat':st.cat=v;st.search='';st.view='menu';render();emit('category',v);break;
-      case 'add':var d=findDish(v);if(d){st.cart.push({name:d.name,price:d.price});render();emit('add',d);}break;
+      case 'add':var d=findDish(v);if(d){addToCart(d);render();emit('add',d);}break;
       case 'prevOpen':st.view='prev';st.openOrder=null;render();emit('prevOpen');break;
       case 'prevShow':if(st.openOrder===v){st.openOrder=null;render();emit('prevHide',v);}else{st.openOrder=v;render();emit('prevShow',v);}break;
-      case 'prevAdd':var p=v.split(':'),ord=findOrder(p[0]),it=ord&&ord.items[+p[1]];if(it){st.cart.push({name:it.name,price:it.price});render();emit('prevAdd',it);}break;
+      case 'prevAdd':var p=v.split(':'),ord=findOrder(p[0]),it=ord&&ord.items[+p[1]];if(it){addToCart(it);render();emit('prevAdd',it);}break;
       case 'prevBack':st.view='menu';st.openOrder=null;render();emit('prevBack');break;
       case 'type':st.orderType=v;render();emit('type',v);break;
       case 'disp':var k=b.getAttribute('data-k');st[k]=Math.max(0,st[k]+(+b.getAttribute('data-d')));render();emit('disp',k,st[k]);break;
+      case 'qty':st.cart.forEach(function(c){if(c.key===v)c.qty=Math.max(1,c.qty+(+b.getAttribute('data-d')));});render();emit('cartQty',v);break;
+      case 'remove':st.cart=st.cart.filter(function(c){return c.key!==v;});render();emit('cartRemove',v);break;
       case 'continue':emit('continue');break;
       case 'coupon':emit('coupon');break;
     }
@@ -432,12 +464,12 @@ function mount(root,opts){
   });
   api={on:function(ev,f){(hs[ev]=hs[ev]||[]).push(f);return api;},
     setTargets:function(list){targets=(list||[]).slice();render();},
-    render:render,state:st,root:root,
+    render:render,state:st,root:root,addToCart:function(it){addToCart(it);render();},undoLast:undoLast,
     el:function(k){return root.querySelector('[data-target="'+k+'"]');}};
   render();
   return api;
 }
-window.OrdersSim={mount:mount,version:'4'};
+window.OrdersSim={mount:mount,version:'5'};
 })();
 
 </script>
@@ -511,15 +543,24 @@ const STATIONS = [
     ],
     done:'הלוגו מחזיר לפרטי לקוח, ו«המשך למסך ההזמנות» מחזיר להזמנה.' },
   { id:'search', title:'חיפוש מנה',
-    scenario:'לקוח רוצה להזמין שניצל.',
+    scenario:'לקוח רוצה להזמין שניצל לילדים.',
     explain:'אפשר להקליד חלק מהשם של המנה, ולאט לאט הרשימה מסתננת עד שמופיעה המנה — לא חייבים לכתוב את כל השם.',
     steps:[
       { text:'הקלידו בתיבת החיפוש את תחילת שם המנה — ותראו איך הרשימה מסתננת עד שהמנה מופיעה', target:'search', match:(ev,q)=>ev==='search'&&isSchnitzelPrefix(q) },
-      { text:'מצאתם את המנה? סגרו את החיפוש ב־✕', target:'searchClear', match:ev=>ev==='searchClear' }
+      { text:'הוסיפו את המנה המתאימה ללקוח עם «+ הוסף» — היא תופיע משמאל ב«פירוט הזמנה»', target:'add:schnitzel', match:(ev,d)=>ev==='add'&&d&&d.id==='schnitzel' },
+      { text:'ראיתם את המנה בפירוט ההזמנה משמאל? סגרו את החיפוש ב־✕', target:'searchClear', match:ev=>ev==='searchClear' }
     ],
-    wrong:[ { ev:'searchClear', when:i=>i===0, tip:'עוד לא — קודם מקלידים בתיבת החיפוש את תחילת שם המנה, עד שהמנה מופיעה ברשימה. ואז סוגרים ב־✕.' } ],
-    hints:[ { ev:'search', when:(i,q)=>i===0&&(q||'').trim().length>=2&&!isSchnitzelPrefix(q), tip:'הרשימה מסתננת לפי מה שהקלדתם — נסו להתחיל את שם המנה שהלקוח ביקש.' } ],
-    done:'מספיק חלק מהשם — הרשימה מסתננת עד שהמנה מופיעה, ואז סוגרים ב־✕.' },
+    wrong:[
+      { ev:'searchClear', when:i=>i===0, tip:'עוד לא — קודם מקלידים בתיבת החיפוש את תחילת שם המנה, עד שהמנה מופיעה ברשימה.' },
+      { ev:'searchClear', when:i=>i===1, tip:'עוד לא — קודם מוסיפים את המנה המתאימה עם «+ הוסף», ורק אז סוגרים את החיפוש.' },
+      { ev:'add', when:(i,d)=>i===1&&d&&d.id!=='schnitzel', undo:true, tip:'זו לא המנה המתאימה — הלקוח רוצה שניצל לילדים. קראו את שמות המנות בתוצאות.' }
+    ],
+    hints:[
+      { ev:'search', when:(i,q)=>i===0&&(q||'').trim().length>=2&&!isSchnitzelPrefix(q), tip:'הרשימה מסתננת לפי מה שהקלדתם — נסו להתחיל את שם המנה שהלקוח ביקש.' },
+      { ev:'add', when:i=>i===0, undo:true, tip:'בשאלה הזו מתרגלים חיפוש — קודם הקלידו בתיבת החיפוש את תחילת שם המנה.' },
+      { ev:'add', when:i=>i===2, undo:true, tip:'המנה כבר בפירוט ההזמנה — עכשיו סוגרים את החיפוש ב־✕.' }
+    ],
+    done:'מצאתם בחיפוש חלקי, הוספתם את שניצל פנקו קידס — והוא מופיע בפירוט ההזמנה משמאל.' },
   { id:'prev', title:'הזמנות קודמות',
     scenario:'רוב הלקוחות חוזרים על אותן הזמנות. יש לנו לקוח קיים במערכת שרוצה להתחיל הזמנה — בואו נראה מה הוא הזמין מקודם ונעשה את הכול הרבה יותר קל.',
     steps:[
@@ -529,25 +570,25 @@ const STATIONS = [
       { text:'צאו מההזמנות הקודמות עם כפתור «חזרה» למעלה — חוזרים לתפריט', target:'prevBack', match:ev=>ev==='prevBack' }
     ],
     wrong:[ { ev:'prevBack', when:i=>i>=1&&i<3, tip:'עוד לא — קודם מוסיפים מנה מההזמנה הקודמת, ורק אז חוזרים לתפריט.' } ],
-    done:'הוספתם מנה מהזמנה קודמת וחזרתם לתפריט — המנה מופיעה בפירוט ההזמנה משמאל.' },
+    done:'הוספתם מנה מהזמנה קודמת וחזרתם לתפריט — המנה, כולל השינויים שבה, מופיעה בפירוט ההזמנה משמאל.' },
   { id:'summary', type:'mc', title:'פירוט הזמנה', focus:['cart'],
-    q:'מה מופיע בצד שמאל תחת «פירוט הזמנה», ולמה זה חשוב?',
+    q:'הלקוח סיים לבחור מנות. מה עושים עם «פירוט הזמנה» שמשמאל?',
     options:[
-      { t:'רק שם הלקוח והטלפון שלו' },
-      { t:'המנות שנבחרו, דמי משלוח וסה״כ לתשלום — כדי לוודא מול הלקוח שהכול נכון', ok:true },
-      { t:'רשימת החוסרים של הסניף' },
-      { t:'היסטוריית שיחות עם הלקוח' }
+      { t:'עוברים עם הלקוח על כל מנה שנבחרה — מה יש בכל מנה ואילו שינויים עשינו בה — ומוודאים איתו שההזמנה שלקחנו נכונה', ok:true },
+      { t:'מקריאים ללקוח רק את שמות המנות — השינויים כבר שמורים במערכת ואין צורך לחזור עליהם' },
+      { t:'שואלים את הלקוח אם הוא זוכר מה הזמין — ואם הוא לא מתקן, ממשיכים' },
+      { t:'עוברים רק על המנות שעשינו בהן שינויים — את השאר הלקוח כבר יודע' }
     ],
-    tipWrong:'הסתכלו בעמודה השמאלית במסך — מה רשום מתחת ל«פירוט הזמנה»?' },
+    tipWrong:'הסתכלו בפירוט ההזמנה משמאל — מה רשום בכל שורה, ומה צריך לוודא מול הלקוח?' },
   { id:'chop', type:'mc', title:'צ׳ופסטיקס וסכו״ם', focus:['eco'],
     q:'הלקוח לא אמר כלום על צ׳ופסטיקס או סכו״ם. מה עושים?',
     options:[
-      { t:'מוסיפים סכו״ם וצ׳ופסטיקס לכל סועד, ליתר ביטחון' },
-      { t:'לא מזכירים בכלל — מי שצריך יבקש' },
-      { t:'שואלים אם הוא רוצה צ׳ופסטיקס · סכו״ם לא מוסיפים', ok:true },
-      { t:'מוסיפים תמיד 4 צ׳ופסטיקס' }
+      { t:'שואלים אם הוא רוצה צ׳ופסטיקס. סכו״ם חד״פ לא מציעים כי הוא יקר — מוסיפים רק אם הלקוח מבקש', ok:true },
+      { t:'שואלים אם הוא רוצה צ׳ופסטיקס או סכו״ם, ומוסיפים מה שהוא בוחר' },
+      { t:'מוסיפים צ׳ופסטיקס וסכו״ם לכל סועד, ליתר ביטחון' },
+      { t:'לא שואלים כלום — מי שצריך יבקש בעצמו' }
     ],
-    tipWrong:'קראו את ההודעה הירוקה מעל סכו״ם וצ׳ופסטיקס במסך.' },
+    tipWrong:'קראו את ההודעה הירוקה מעל סכו״ם וצ׳ופסטיקס במסך — ונזכרו מה יקר לסניף.' },
   { id:'cats', type:'mc', title:'קטגוריות', focus:['cats'],
     q:'הלקוח שואל «מה יש לכם לילדים?». איפה הכי מהר למצוא?',
     options:[
@@ -558,14 +599,14 @@ const STATIONS = [
     ],
     tipWrong:'הסתכלו ברשימה מימין, מתחת לחיפוש.' },
   { id:'continue', type:'mc', title:'לפני «המשך»', focus:['continue'],
-    q:'הלקוח סיים לבחור מנות. מה עושים לפני שלוחצים «המשך»?',
+    q:'עברתם עם הלקוח על המנות. מה עושים עכשיו, לפני שלוחצים «המשך»?',
     options:[
-      { t:'לוחצים «המשך» מיד — את הרטבים הסניף מוסיף לבד' },
-      { t:'מקריאים את ההזמנה ולוחצים «המשך» — רטבים רק אם הלקוח מבקש' },
-      { t:'בוחרים עם הלקוח רטבים, עוברים איתו על ההזמנה מ«פירוט הזמנה» ומוודאים שהכול נכון — ורק אז «המשך»', ok:true },
-      { t:'בוחרים רטבים ולוחצים «המשך» — אין צורך לעבור על ההזמנה' }
+      { t:'שואלים אם הוא רוצה צ׳ופסטיקס (סכו״ם רק אם ביקש) ← בודקים כמות רטבים ועוברים איתו על הרטבים ← אומרים לו את הסכום הכולל: «זה עולה X כולל דמי משלוח» ← «המשך»', ok:true },
+      { t:'שואלים אם הוא רוצה צ׳ופסטיקס וסכו״ם ← בודקים כמות רטבים ועוברים איתו על הרטבים ← אומרים לו «זה עולה X כולל דמי משלוח» ← «המשך»' },
+      { t:'שואלים אם הוא רוצה צ׳ופסטיקס (סכו״ם רק אם ביקש) ← אומרים לו «זה עולה X כולל דמי משלוח» ← «המשך» — הרטבים מצטרפים לבד לפי המנות' },
+      { t:'שואלים אם הוא רוצה צ׳ופסטיקס (סכו״ם רק אם ביקש) ← בודקים כמות רטבים ועוברים איתו על הרטבים ← «המשך» — את הסכום הוא יראה בהודעה שתגיע אליו' }
     ],
-    tipWrong:'שני דברים קורים לפני «המשך»: רטבים, ובדיקה של ההזמנה עם הלקוח.' },
+    tipWrong:'לפני «המשך» יש שלושה דברים: צ׳ופסטיקס (בלי להציע סכו״ם), רטבים, וסכום כולל עם דמי משלוח.' },
   /* quiz */
   { id:'q1', type:'mc', quiz:true, title:'לוגו אצה',
     q:'למה משמש לוגו אצה בראש מסך ההזמנות?',
@@ -589,11 +630,7 @@ const STATIONS = [
       { t:'רוב הלקוחות חוזרים על אותן הזמנות — לפעמים קל יותר להוסיף מההזמנה הקודמת מאשר לבנות הכול מאפס', ok:true }
     ],
     tipWrong:'חשבו על מה שנאמר על הרגלי לקוחות.' },
-  { id:'q4', type:'mc', quiz:true, title:'צ׳ופסטיקס',
-    q:'הלקוח לא ביקש כלום לגבי סכו״ם/צ׳ופסטיקס. מה עושים?',
-    options:[ { t:'שואלים אם הוא רוצה צ׳ופסטיקס · סכו״ם לא מוסיפים', ok:true }, { t:'מוסיפים סכו״ם אוטומטית לכבוד האורחים' }, { t:'לא מזכירים בכלל' }, { t:'מוסיפים 4 סכו״ם ו-4 צ׳ופסטיקס תמיד' } ],
-    tipWrong:'חזרו לנוהל צ׳ופסטיקס מול סכו״ם.' },
-  { id:'q5', type:'mc', quiz:true, title:'רטבים (ברמת חשיבות)',
+  { id:'q4', type:'mc', quiz:true, title:'רטבים (ברמת חשיבות)',
     q:'למה רטבים חשובים כל כך בהזמנה? (פירוט מלא — בהדרכה ייעודית)',
     options:[
       { t:'רטבים הם אופציונליים לגמרי ואף פעם לא שואלים' },
@@ -731,7 +768,7 @@ function applyTargets(){
   let t=st.steps[stepIdx].target; const v=sim.state.view;
   if(v==='customer'&&t!=='backToOrder') t='backToOrder';            /* wandered to customer details → pulse the way back */
   else if(v==='prev'&&!['prevShow','prevAdd','prevBack'].includes(t)) t='prevBack'; /* wandered into prev orders → pulse back */
-  else if(t==='searchClear'&&!sim.state.search) t='search';
+  else if((t==='searchClear'||t.indexOf('add:')===0)&&!sim.state.search) t='search';
   sim.setTargets([t]);
 }
 function onSim(ev,payload){
@@ -745,12 +782,12 @@ function onSim(ev,payload){
     paintSteps(); applyTargets(); return;
   }
   const w=(st.wrong||[]).find(r=>r.ev===ev&&(!r.when||r.when(stepIdx,payload)));
-  if(w){ AG.attempt(current,{noFast:true}); const locked=AG.wrong(current); if(!locked) fb('bad',esc(w.tip)); applyTargets(); return; }
+  if(w){ if(w.undo) sim.undoLast(); AG.attempt(current,{noFast:true}); const locked=AG.wrong(current); if(!locked) fb('bad',esc(w.tip)); applyTargets(); return; }
   const hnt=(st.hints||[]).find(r=>r.ev===ev&&r.when(stepIdx,payload));
-  if(hnt) fb('hint',esc(hnt.tip)); else if(ev==='search') fb('','');
+  if(hnt){ if(hnt.undo) sim.undoLast(); fb('hint',esc(hnt.tip)); } else if(ev==='search') fb('','');
   applyTargets();
 }
-['logo','backToOrder','search','searchClear','category','add','prevOpen','prevShow','prevHide','prevAdd','prevBack','type','disp','continue','coupon']
+['logo','backToOrder','search','searchClear','category','add','prevOpen','prevShow','prevHide','prevAdd','prevBack','type','disp','cartQty','cartRemove','continue','coupon']
   .forEach(ev=>sim.on(ev,p=>onSim(ev,p)));
 
 function pass(doneText){

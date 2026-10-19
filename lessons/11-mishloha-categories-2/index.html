@@ -128,6 +128,11 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 .qthen-lead{font-weight:700;margin-bottom:6px}
 .cc-wrap .cc-txt{font-family:inherit;letter-spacing:0;white-space:nowrap}
 
+.qkey{margin:10px 0 4px;background:#fff4d6;border:1px solid #f5c26b;border-right:5px solid #f59e0b;border-radius:8px;padding:10px 12px;font-weight:800;font-size:1.02rem;line-height:1.5;color:#7a3e00}
+.qans{margin-top:10px;font-size:.92rem;font-weight:700;color:#0f766e;background:#ecfdf5;border-radius:8px;padding:6px 10px}
+.qtask2{margin-top:10px}
+.qtask2 .qtask-h{color:#111827;font-weight:800}
+
 /* ===== Atza Academy · Mishloha orders-screen simulator (reusable) · v6 =====
    Colors sampled from Kobbi's real screenshots (Oct 2026):
    banner #BFBFBF + faint white flowers · brand text #52493E · pink #ED1556
@@ -400,6 +405,7 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 @media (max-width:820px){.osim-dwin .dh{grid-template-columns:1fr}.osim-dwin .dnotes{grid-template-columns:1fr;gap:12px}}
 .osim-dish.v7 .ds{white-space:pre-line}
 .osim-dwin .dd{white-space:pre-line}
+.osim-dwin .dsec.osim-pulse,.osim-dwin .dd.osim-pulse{border-radius:6px}
 
 </style>
 </head>
@@ -665,13 +671,13 @@ function mount(root,opts){
     var ph=d.img&&d.img!=='logo'?'<img class="ph" src="'+d.img+'" alt="'+esc(d.name)+'">':(d.img==='logo'||d.fees||!d.img&&o.logoInWindow?'<img class="lg" src="'+o.logo+'" alt="אצה">':'');
     var h='<div class="osim-overlay osim-dovl" data-act="dishOverlay"><div class="osim-dwin" role="dialog" aria-label="'+esc(d.name)+'" style="top:'+(s.top||20)+'px">'+
       '<div class="dh"><button type="button" class="osim-dclose'+T('dishClose')+'" data-act="dishClose" data-target="dishClose" aria-label="סגירה">✕</button>'+
-      '<div class="dimg'+(ph?'':' empty')+'">'+ph+'</div><div class="dinfo"><div class="dt">'+esc(d.name)+'</div>'+(d.desc?'<div class="dd">'+esc(d.desc)+'</div>':'')+
+      '<div class="dimg'+(ph?'':' empty')+'">'+ph+'</div><div class="dinfo"><div class="dt">'+esc(d.name)+'</div>'+(d.desc?'<div class="dd'+T('dishDesc')+'" data-target="dishDesc">'+esc(d.desc)+'</div>':'')+
       '<div class="dp">'+(d.fees?0:(d.price||0))+' ₪</div>'+((d.tags||[]).length?tagsHTML(d).replace('class="tags"','class="tags dtags"'):'')+
       '<button type="button" class="dfav'+(s.fav?' on':'')+'" data-act="dishFav"><span class="c">'+ICON.heart.replace('#d4d4d4',s.fav?'#ED1556':'#bbb')+'</span>הוסף למנות שאהבתי</button>'+
       '<div class="dqty'+T('dishQty')+'" data-target="dishQty"><span class="l">כמות לבחירה</span><span class="q"><button type="button" data-act="dishQty" data-d="1" aria-label="הוספת כמות">+</button><b>'+s.qty+'</b><button type="button" data-act="dishQty" data-d="-1" aria-label="הורדת כמות">−</button></span></div></div></div><div class="db">';
     if(d.extras){h+='<div class="dsec"><div class="sh">'+esc(d.extras.title||'תוספת לבחירה')+'</div><div class="sp">אפשר לבחור עד '+(d.extras.max||1)+' פריטים</div><div class="chips">'+
       d.extras.items.map(function(x){return chip('dishExtra',x.name,x.name+(x.price?' (+₪'+x.price+')':''),s.extras.indexOf(x.name)>=0,'extra:'+x.name);}).join('')+'</div></div>';}
-    if(d.changes&&d.changes.length){h+='<div class="dsec"><div class="sh">שינויים אפשריים במנה</div><div class="chips">'+
+    if(d.changes&&d.changes.length){h+='<div class="dsec'+T('secChanges')+'" data-target="secChanges"><div class="sh">שינויים אפשריים במנה</div><div class="chips">'+
       d.changes.map(function(x){return chip('dishChange',x,x,s.changes.indexOf(x)>=0,'change:'+x);}).join('')+'</div></div>';}
     (d.groups||[]).forEach(function(g,gi){var bad=miss.indexOf(g.title)>=0;
       h+='<div class="dsec'+(bad?' miss':'')+T('group:'+gi)+'" data-target="group:'+gi+'"><div class="sh">'+esc(g.title)+'</div><div class="sp">חובה לבחור '+(g.required||1)+'</div><div class="chips">'+
@@ -914,34 +920,42 @@ const STATIONS = [
     ],
     tipWrong:'קראו את התיאור של «אגרול ירקות» בכרטיס המנה (מסומן בכתום). כמה יחידות יש במנה אחת?' },
 
-  { id:'pickles', title:'חמוצים יפניים — רק השינוי שבחלון',
+  { id:'pickles', title:'חמוצים יפניים — «בלי מלפפון»?',
     setup:s=>s.load({cart:[],cat:'ראמן'}),
-    scenario:'הלקוח מזמין «חמוצים יפניים»: «בלי שומשום — וגם בלי מלפפון».',
-    explain:'כל המנות הראשונות נמצאות ב«נישנושאצה». בחלון המנה בודקים מה אפשר לשנות — רק מה שכתוב ב«שינויים אפשריים במנה».',
+    scenario:'הלקוח: «אני רוצה חמוצים יפניים — בלי מלפפון».',
+    explain:'לפני שעונים — בודקים בחלון המנה מה אפשר לשנות.',
     steps:[
-      { text:'פתחו את הקטגוריה «נישנושאצה» (מנות ראשונות)', target:'cat:נישנושאצה', match:(ev,c)=>ev==='category'&&c==='נישנושאצה' },
-      { text:'לחצו על התמונה של «חמוצים יפניים»', target:'dish:pickles', match:(ev,d)=>ev==='dishOpen'&&d.id==='pickles' },
-      { text:'בחרו את השינוי «ללא שומשום»', target:inDish('pickles','change:ללא שומשום'), ok:s=>has(s,'pickles','changes','ללא שומשום') },
-      { text:'לחצו «הוסף להזמנה»', target:inDish('pickles','dishAdd'), match:(ev,l,d)=>ev==='dishAdd'&&d.id==='pickles'&&l.opts.includes('ללא שומשום')&&!/מלפפון/.test(l.note) }
-    ],
-    wrong:[
-      { ev:'dishAdd', when:(i,l,d)=>d.id==='pickles'&&/מלפפון/.test(l.note), undo:true, goto:1, tip:'אי אפשר להוריד מלפפון — בחלון יש רק «ללא שומשום». שינוי שלא קיים בחלון לא כותבים בהערות למטבח. המנה הוסרה, פתחו שוב.' },
-      { ev:'dishAdd', when:(i,l,d)=>d.id==='pickles'&&!l.opts.includes('ללא שומשום'), undo:true, goto:1, tip:'המנה נכנסה בלי «ללא שומשום», והלקוח ביקש בלי שומשום. המנה הוסרה — פתחו שוב ובחרו «ללא שומשום».' }
+      { text:'פתחו את «נישנושאצה» (מנות ראשונות)', target:'cat:נישנושאצה', match:(ev,c)=>ev==='category'&&c==='נישנושאצה' },
+      { text:'לחצו על התמונה של «חמוצים יפניים» ובדקו את «שינויים אפשריים במנה»', target:'dish:pickles', match:(ev,d)=>ev==='dishOpen'&&d.id==='pickles' }
     ],
     hints:[
-      { ev:'dishNote', when:(i,k,t)=>k==='kitchen'&&/מלפפון/.test(t), tip:'רגע — במנה הזו אפשר רק «ללא שומשום». את המלפפון אי אפשר להוריד, גם לא דרך ההערות.' },
-      { ev:'dishOpen', when:(i,d)=>d.id!=='pickles', closeDish:true, tip:'הלקוח הזמין «חמוצים יפניים».' },
+      { ev:'dishOpen', when:(i,d)=>d.id!=='pickles', closeDish:true, tip:'הלקוח ביקש «חמוצים יפניים».' },
+      { ev:'dishNote', when:(i,k,t)=>k==='kitchen'&&/מלפפון/.test(t), tip:'אי אפשר להוריד מלפפון — גם לא דרך ההערות למטבח.' },
       { ev:'dishClose', when:i=>i>=2, goto:1, tip:'החלון נסגר — פתחו שוב את «חמוצים יפניים».' }
     ],
-    stepsDone:'✓ חמוצים יפניים · ללא שומשום נכנסו להזמנה.',
-    q:'הלקוח: «ומה עם המלפפון?». מה עונים לו?',
+    keyNote:'⚠️ אי אפשר בלי מלפפון — אי אפשר לבחור את הירקות במנה. השינוי היחיד: «ללא שומשום».',
+    qFocus:['secChanges'],
+    stepsDone:'✓ החלון פתוח — «שינויים אפשריים במנה» מסומן בכתום.',
+    q:'מה עונים ללקוח?',
     options:[
-      { t:'«בסדר, נכתוב למטבח בלי מלפפון»' },
-      { t:'מתנצלים: במנה הזו אפשר רק «ללא שומשום» — את המלפפון אי אפשר להוריד', ok:true },
-      { t:'«אין בעיה» — ומוסיפים «בלי מלפפון» בשדה «שם למנה»' },
-      { t:'מבטיחים לו שהמטבח יוריד את המלפפון' }
+      { t:'מתנצלים: אי אפשר בלי מלפפון; אפשר רק «ללא שומשום»', ok:true },
+      { t:'מאשרים, וכותבים בהערות למטבח «בלי מלפפון»' },
+      { t:'מאשרים, וכותבים «בלי מלפפון» בשדה «שם למנה»' },
+      { t:'מבטיחים שהמטבח ינסה להוריד את המלפפון' }
     ],
-    tipWrong:'מה היה כתוב בחלון של חמוצים יפניים תחת «שינויים אפשריים במנה»?' },
+    tipWrong:'מה כתוב בחלון תחת «שינויים אפשריים במנה»? רק מה שכתוב שם אפשר.',
+    ansDone:'מתעקש? בודקים בתיק נציג ← מנהל משמרת / הסניף.',
+    afterLead:'הלקוח: «בסדר, אז בלי שומשום». מוסיפים את המנה:',
+    afterSteps:[
+      { text:'החלון של «חמוצים יפניים» פתוח (אם נסגר — לחצו שוב על התמונה)', target:'dish:pickles', ok:s=>!!(s.dish&&s.dish.id==='pickles'), match:(ev,d)=>ev==='dishOpen'&&d.id==='pickles' },
+      { text:'בחרו «ללא שומשום»', target:inDish('pickles','change:ללא שומשום'), ok:s=>has(s,'pickles','changes','ללא שומשום') },
+      { text:'לחצו «הוסף להזמנה»', target:inDish('pickles','dishAdd'), match:(ev,l,d)=>ev==='dishAdd'&&d.id==='pickles'&&l.opts.includes('ללא שומשום')&&!/מלפפון/.test(l.note+' '+(l.label||'')) }
+    ],
+    wrong:[
+      { ev:'dishAdd', when:(i,l,d)=>d.id==='pickles'&&/מלפפון/.test(l.note+' '+(l.label||'')), undo:true, goto:0, tip:'«בלי מלפפון» לא כותבים — אי אפשר לבחור את הירקות. המנה הוסרה, פתחו שוב.' },
+      { ev:'dishAdd', when:(i,l,d)=>d.id==='pickles'&&!l.opts.includes('ללא שומשום'), undo:true, goto:0, tip:'המנה נכנסה בלי «ללא שומשום». המנה הוסרה — פתחו שוב ובחרו «ללא שומשום».' }
+    ],
+    done:'חמוצים יפניים · ללא שומשום — בלי הבטחות על המלפפון.' },
 
   { id:'tomyam', title:'טום יאם — הזמנה עתידית ופחות חריף',
     setup:s=>s.load({cart:[],cat:'נישנושאצה'}),
@@ -975,16 +989,23 @@ const STATIONS = [
     ],
     tipWrong:'בחריפות אף פעם לא מבטיחים, וגם לא מוותרים על הבקשה. מה נשאר?' },
 
-  { id:'bao', type:'mc', title:'באנים — מה זה באן צ׳זה?', focus:['dish:baocheese'],
+  { id:'bao', title:'באן צ׳זה',
     setup:s=>s.load({cart:[],cat:'באנים'}),
-    q:'הלקוח שואל: «מה זה באן צ׳זה?». מה התשובה הנכונה?',
+    scenario:'הלקוח: «מה זה באן צ׳זה?»',
+    steps:[ { text:'לחצו על התמונה של «באן צ׳זה» וקראו את התיאור', target:'dish:baocheese', match:(ev,d)=>ev==='dishOpen'&&d.id==='baocheese' } ],
+    hints:[ { ev:'dishOpen', when:(i,d)=>d.id!=='baocheese', closeDish:true, tip:'פתחו את «באן צ׳זה - 2 יח׳».' } ],
+    keyNote:'פנקו = פירורי לחם יפניים · יוזו = רוטב הדרים יפני (כמו אתרוג)',
+    qFocus:['dishDesc'],
+    stepsDone:'✓ התיאור מסומן בכתום.',
+    q:'מה עונים?',
     options:[
-      { b:['2 לחמניות באו מאודות — ₪49','חציל בבלילת טמפורה','רוטב יוזו (רוטב סויה מתקתק), חסה, כוסברה ופלפל צ׳ילי'] },
-      { b:['2 לחמניות באו מאודות — ₪49','חציל בציפוי פנקו (פירורי לחם יפניים, כמו שניצל)','רוטב יוזו (רוטב הדרים יפני, כמו אתרוג), חסה, כוסברה ופלפל צ׳ילי'], ok:true },
-      { b:['לחמנייה אחת — ₪49','חציל בציפוי פנקו (פירורי לחם יפניים, כמו שניצל)','רוטב יוזו (רוטב הדרים יפני, כמו אתרוג), חסה, כוסברה ופלפל צ׳ילי'] },
-      { b:['2 לחמניות באו מאודות — ₪49','עוף בציפוי פנקו (פירורי לחם יפניים, כמו שניצל)','רוטב יוזו (רוטב הדרים יפני, כמו אתרוג) וסלט קולסלאו'] }
+      { t:'2 באנים · חציל בפנקו · יוזו', ok:true },
+      { t:'באן אחד · חציל בפנקו · יוזו' },
+      { t:'2 באנים · עוף בפנקו · יוזו' },
+      { t:'2 באנים · חציל בטמפורה · יוזו' }
     ],
-    tipWrong:'קראו את הכרטיס של «באן צ׳זה» (מסומן בכתום), ונזכרו מה זה פנקו ומה זה יוזו.' },
+    tipWrong:'קראו שוב את השם והתיאור בחלון: כמה יחידות, מה בפנים, איזה ציפוי?',
+    done:'באן צ׳זה ₪49: 2 יח׳, חציל בפנקו ורוטב יוזו.' },
 
   /* quiz */
   { id:'q1', type:'mc', quiz:true, title:'איפה המנות הראשונות',
@@ -1018,6 +1039,7 @@ const STATIONS = [
 /* ===== Atza Academy · Mishloha lesson engine (lessons 10–11, from lesson 9) — shared by every orders-sim lesson =====
    Station types:
      mc     : {type:'mc', q, options:[{t|b:[bullets], ok}], tipWrong, focus:[targets], setup(sim)}
+     two-phase: action + {keyNote, qFocus, q, options, ansDone, afterLead, afterSteps:[…]} → steps, highlighted note + question, then more steps
      action : {scenario, explain, steps:[{text, target:key|fn(state)|[keys], match(ev,a,b) | ok(state)}], wrong[], hints[], done, setup(sim)}
               step.ok(state) = state predicate → the engine auto-advances over every consecutive satisfied step (order-free window steps)
               wrong/hints: {ev, when(stepIdx,a,b), tip, undo, reset, close, closeDish, fix(sim), goto:n}
@@ -1148,9 +1170,12 @@ function renderActive(){
   if(isMc){
     h+=mcHTML();
   }else{
+    const list=(arr,id,all)=>'<ol class="qsteps"'+(id?' id="'+id+'"':'')+'>'+arr.map(s=>'<li'+(all?' class="done"':'')+'>'+esc(s.text)+'</li>').join('')+'</ol>';
     h+='<div class="qscen">'+esc(st.scenario)+'</div>'+(st.explain?'<p class="qexpl">'+esc(st.explain)+'</p>':'')+
-      '<div class="qtask"><div class="qtask-h">מה עושים במסך ההזמנות:</div><ol class="qsteps" id="steps'+n+'">'+st.steps.map((s,i)=>'<li>'+esc(s.text)+'</li>').join('')+'</ol></div>';
-    if(st.options&&st._stepsDone) h+='<div class="qthen">'+(st.thenLead?'<div class="qthen-lead">'+esc(st.thenLead)+'</div>':'')+mcHTML()+'</div>';
+      '<div class="qtask"><div class="qtask-h">מה עושים במסך ההזמנות:</div>'+(st._phase2?list(st._steps1,'',true):list(st.steps,'steps'+n))+'</div>';
+    if(st.keyNote&&(st._stepsDone||st._phase2)) h+='<div class="qkey" role="note">'+esc(st.keyNote)+'</div>';
+    if(st.options&&st._stepsDone&&!st._phase2) h+='<div class="qthen">'+(st.thenLead?'<div class="qthen-lead">'+esc(st.thenLead)+'</div>':'')+mcHTML()+'</div>';
+    if(st._phase2) h+='<div class="qans">✓ '+esc(st._ans)+'</div><div class="qtask qtask2"><div class="qtask-h">'+esc(st.afterLead||'עכשיו במסך ההזמנות:')+'</div>'+list(st.steps,'steps'+n)+'</div>';
   }
   h+='<div class="feedback" id="fb'+n+'"></div></section>';
   slot.innerHTML=h; paintSteps();
@@ -1166,7 +1191,7 @@ function fb(kind,html){ const el=document.getElementById('fb'+current); if(!el) 
 function applyTargets(){
   const st=STATIONS[current-1];
   if(!st||passed[current]){ sim.setTargets([]); return; }
-  if(!st.steps||st._stepsDone){ sim.setTargets(sim.state.dish?['dishClose']:(st.focus||[])); return; }
+  if(!st.steps||st._stepsDone){ sim.setTargets(sim.state.dish?(st.qFocus||['dishClose']):(st.focus||[])); return; }   /* qFocus: what to read in the open window while answering */
   let t=st.steps[stepIdx].target; const v=sim.state.view, s=sim.state;
   if(typeof t==='function') t=t(s);
   if(s.dish&&!(Array.isArray(t)?t.length&&t.every(isDishKey):isDishKey(t))){ sim.setTargets(['dishClose']); return; }   /* dish window open, step is elsewhere → pulse ✕ */
@@ -1182,7 +1207,7 @@ function applyTargets(){
   sim.setTargets(t?[t]:[]);
 }
 /* dish-window keys and routing: a dish:<id>/add:<id> target in another category → pulse that category first */
-function isDishKey(t){ return !!t&&typeof t==='string'&&(['dishClose','dishQty','dishAdd','dishKitchen','dishName'].includes(t)||/^(extra|change|group|fee):/.test(t)); }
+function isDishKey(t){ return !!t&&typeof t==='string'&&(['dishClose','dishQty','dishAdd','dishKitchen','dishName','secChanges','dishDesc'].includes(t)||/^(extra|change|group|fee):/.test(t)); }
 function routeToDish(t,s){
   const one=k=>{ if(!k||typeof k!=='string') return k; const m=k.match(/^(dish|add):(.+)$/); if(!m) return k;
     const d=(SIM_DATA.dishes||[]).find(x=>x.id===m[2]); if(d&&!s.search&&s.view==='menu'&&d.cat!==s.cat) return 'cat:'+d.cat; return k; };
@@ -1194,7 +1219,7 @@ function autoAdvance(st){
   return moved;
 }
 function stepsComplete(st){
-  if(st.options){ st._stepsDone=true; renderActive(); fb('ok',esc(st.stepsDone||'✓ כל הצעדים בוצעו — עכשיו ענו על השאלה')); applyTargets(); fitSticky(); return; }
+  if(st.options&&!st._phase2){ st._stepsDone=true; renderActive(); fb('ok',esc(st.stepsDone||'✓ כל הצעדים בוצעו — עכשיו ענו על השאלה')); applyTargets(); fitSticky(); return; }
   pass(st.done);
 }
 function onSim(ev,payload,extra){
@@ -1239,6 +1264,10 @@ document.getElementById('activeSlot').addEventListener('click',e=>{
   const n=current, st=STATIONS[n-1]; if(passed[n]||AG.isLocked(n)||(st.steps&&!st._stepsDone)) return;
   AG.attempt(n);
   const opt=st.options[+b.dataset.o];
+  if(opt.ok&&st.afterSteps&&!st._phase2){   /* two-phase station: question answered → continue with more simulator steps */
+    st._phase2=true; st._ans=opt.t||(opt.b||[]).join(' · '); st._steps1=st.steps; st.steps=st.afterSteps; st._stepsDone=false; stepIdx=0;
+    renderActive(); fb('ok','✓ נכון!'+(st.ansDone?' <span style="font-weight:600">'+esc(st.ansDone)+'</span>':''));
+    if(autoAdvance(st)&&stepIdx>=st.steps.length){ stepsComplete(st); return; } paintSteps(); applyTargets(); fitSticky(); return; }
   if(opt.ok){ b.classList.add('opt-right'); document.querySelectorAll('#station'+n+' .opt-btn').forEach(x=>x.disabled=true); pass(''); }
   else{ b.classList.add('opt-wrong'); const locked=AG.wrong(n); if(!locked) fb('bad',esc(st.tipWrong)+' <button type="button" class="retry">נסה שוב</button>'); }
 });

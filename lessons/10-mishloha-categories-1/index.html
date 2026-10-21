@@ -128,6 +128,11 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 .qthen-lead{font-weight:700;margin-bottom:6px}
 .cc-wrap .cc-txt{font-family:inherit;letter-spacing:0;white-space:nowrap}
 
+.qkey{margin:10px 0 4px;background:#fff4d6;border:1px solid #f5c26b;border-right:5px solid #f59e0b;border-radius:8px;padding:10px 12px;font-weight:800;font-size:1.02rem;line-height:1.5;color:#7a3e00}
+.qans{margin-top:10px;font-size:.92rem;font-weight:700;color:#0f766e;background:#ecfdf5;border-radius:8px;padding:6px 10px}
+.qtask2{margin-top:10px}
+.qtask2 .qtask-h{color:#111827;font-weight:800}
+
 /* ===== Atza Academy · Mishloha orders-screen simulator (reusable) · v6 =====
    Colors sampled from Kobbi's real screenshots (Oct 2026):
    banner #BFBFBF + faint white flowers · brand text #52493E · pink #ED1556
@@ -400,6 +405,14 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 @media (max-width:820px){.osim-dwin .dh{grid-template-columns:1fr}.osim-dwin .dnotes{grid-template-columns:1fr;gap:12px}}
 .osim-dish.v7 .ds{white-space:pre-line}
 .osim-dwin .dd{white-space:pre-line}
+.osim-dwin .dsec.osim-pulse,.osim-dwin .dd.osim-pulse{border-radius:6px}
+
+/* v7.2 (Kobbi 21.10): selected choices = GREEN (correct), «חובה לבחור» = neutral orange; red only on a failed add (.miss/.derr) */
+.osim-chipb.on{border-color:#16a34a;box-shadow:inset 0 0 0 1px #16a34a;background:#e8f7ee;color:#166534;font-weight:700}
+.osim-fee.on{border-color:#16a34a;box-shadow:inset 0 0 0 1px #16a34a}
+.osim-fee.on span{background:#e8f7ee;color:#166534;font-weight:700}
+.osim-dwin .sp{color:#c2410c}
+.osim-dwin .dsec.miss .sp{color:#C81E1E}
 
 </style>
 </head>
@@ -421,11 +434,11 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 <section class="card"><h2>לפני שמתחילים</h2>
 <ul class="intro-list">
 <li><strong>חלון המנה:</strong> לוחצים על <strong>התמונה</strong> של המנה ונפתח חלון. מוסיפים להזמנה רק דרך <strong>«הוסף להזמנה»</strong>, והמנה מופיעה ב«פירוט הזמנה» משמאל.</li>
-<li><strong>הכלל החשוב:</strong> אם בחלון יש <strong>«שינויים אפשריים במנה»</strong>, אפשר רק אותם. <strong>אם לא כתוב, אין שינויים בכלל.</strong> לקוח שמבקש שינוי שאי אפשר: קודם <strong>מתנצלים</strong>. מתעקש? <strong>בודקים בתיק הנציג</strong>. עדיין מתעקש? <strong>שואלים מנהל משמרת או מתקשרים לסניף</strong>.</li>
+<li><strong>הכלל החשוב — הסרה מול החלפה:</strong> <strong>להוריד רכיב</strong> מרול מומלץ (מומלאצה, גם הרול שבעסקית רול מומלאצה) <strong>תמיד אפשר</strong>. אם ההסרה לא מופיעה ב«שינויים אפשריים במנה», כותבים אותה <strong>בהערות למטבח</strong> (בעברית וגם באנגלית, כמו בהדרכה 11). <strong>להחליף רכיב</strong> (לשים משהו במקומו) אפשר <strong>רק אם זה מופיע ב«שינויים אפשריים במנה»</strong>. לקוח שמתעקש על החלפה שאי אפשר: <strong>מתנצלים</strong> ← <strong>תיק נציג</strong> ← <strong>מנהל משמרת או הסניף</strong>.</li>
 <li><strong>הזמנה עתידית שאושרה:</strong> כותבים <strong>«לשעה 20:00»</strong> (לחיצה כפולה ← Ctrl+C) ומדביקים בהערות למטבח של <strong>כל מנה</strong>, כדי שלא יתחילו להכין.</li>
-<li><strong>שונות:</strong> «פריט כללי» הוא פריט כספי. «הוספת דמי משלוח» משמשת כשמזינים מקום כללי (עיר הסניף, ובהערה את הישוב בלי רחוב, כמו קימרון בהדרכה 7) וצריך להוסיף דמי משלוח ידנית: בוחרים סכום ← «הוסף להזמנה».</li>
+<li><strong>שונות:</strong> «פריט כללי» הוא פריט כספי. «הוספת דמי משלוח» משמשת כשמזינים מקום כללי (עיר הסניף, ובהערה את הישוב בלי רחוב, כמו קימרון בהדרכה 7) והמערכת מחשבת דמי משלוח נמוכים מדי. מוסיפים ידנית את ההפרש: למשל משלוח לישוב ב־₪25, והמערכת הוסיפה ₪20 ← בוחרים «דמי משלוח 5» ← «הוסף להזמנה».</li>
 <li><strong>מבצעים:</strong> כשיש מבצעים, הם בקטגוריה הזו. בדרך כלל יש רק <strong>«מארז סושי בוקס» ₪279</strong>: 6 רולים מקטגוריית «מומלאצה», כל רול <strong>«חובה לבחור»</strong>, <strong>בלי שינויים</strong>.</li>
-<li><strong>עסקיות:</strong> רק בחלק מהסניפים, ורק <strong>בין 11:00 ל־16:00</strong>. למשל עסקית מוקפץ ₪62 (מנה ראשונה + מוקפץ + שתייה לבחירה) ועסקית רול מומלאצה ₪59. בפנים יש שדות «חובה לבחור» ושתייה חובה. <strong>אי אפשר לשנות כלום.</strong></li>
+<li><strong>עסקיות:</strong> רק בחלק מהסניפים, ורק <strong>בין 11:00 ל־16:00</strong>. למשל עסקית מוקפץ ₪62 (מנה ראשונה + מוקפץ + שתייה לבחירה) ועסקית רול מומלאצה ₪59. בפנים יש שדות «חובה לבחור» ושתייה חובה. <strong>אין החלפות ושינויים בהרכב:</strong> בוחרים רק מהאפשרויות שבחלון.</li>
 <li>הנציג והלקוח בסימולטור מזויפים לתרגול. המנות, המחירים והתמונות לקוחים מהמסך האמיתי.</li>
 </ul></section>
 <section class="card"><h2>תנאי מעבר</h2>
@@ -442,7 +455,7 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
     <div id="activeSlot"></div>
     <div class="complete-banner" id="completeBanner">
       <h2>כל הכבוד — סיימתם את קטגוריות חלק 1!</h2>
-      <p>תרגלתם: דמי משלוח ידניים מ«שונות», מארז סושי בוקס עם «חובה לבחור», עסקיות (שעות, בלי שינויים), וקריאת חלון מנה: אין «שינויים אפשריים» — אין שינויים.</p>
+      <p>תרגלתם: דמי משלוח ידניים מ«שונות», מארז סושי בוקס עם «חובה לבחור», עסקיות (שעות, בלי שינויים), הסרת רכיב מרול מומלץ בהערות למטבח, והחלפה — רק אם מופיעה בחלון.</p>
       <div class="flag-summary" id="flagSummary"></div>
       <div class="next-lesson-wrap">
         <button type="button" class="next-lesson-btn is-disabled" id="nextLessonBtn" disabled>לשיעור הבא</button>
@@ -664,13 +677,13 @@ function mount(root,opts){
     var ph=d.img&&d.img!=='logo'?'<img class="ph" src="'+d.img+'" alt="'+esc(d.name)+'">':(d.img==='logo'||d.fees||!d.img&&o.logoInWindow?'<img class="lg" src="'+o.logo+'" alt="אצה">':'');
     var h='<div class="osim-overlay osim-dovl" data-act="dishOverlay"><div class="osim-dwin" role="dialog" aria-label="'+esc(d.name)+'" style="top:'+(s.top||20)+'px">'+
       '<div class="dh"><button type="button" class="osim-dclose'+T('dishClose')+'" data-act="dishClose" data-target="dishClose" aria-label="סגירה">✕</button>'+
-      '<div class="dimg'+(ph?'':' empty')+'">'+ph+'</div><div class="dinfo"><div class="dt">'+esc(d.name)+'</div>'+(d.desc?'<div class="dd">'+esc(d.desc)+'</div>':'')+
+      '<div class="dimg'+(ph?'':' empty')+'">'+ph+'</div><div class="dinfo"><div class="dt">'+esc(d.name)+'</div>'+(d.desc?'<div class="dd'+T('dishDesc')+'" data-target="dishDesc">'+esc(d.desc)+'</div>':'')+
       '<div class="dp">'+(d.fees?0:(d.price||0))+' ₪</div>'+((d.tags||[]).length?tagsHTML(d).replace('class="tags"','class="tags dtags"'):'')+
       '<button type="button" class="dfav'+(s.fav?' on':'')+'" data-act="dishFav"><span class="c">'+ICON.heart.replace('#d4d4d4',s.fav?'#ED1556':'#bbb')+'</span>הוסף למנות שאהבתי</button>'+
       '<div class="dqty'+T('dishQty')+'" data-target="dishQty"><span class="l">כמות לבחירה</span><span class="q"><button type="button" data-act="dishQty" data-d="1" aria-label="הוספת כמות">+</button><b>'+s.qty+'</b><button type="button" data-act="dishQty" data-d="-1" aria-label="הורדת כמות">−</button></span></div></div></div><div class="db">';
     if(d.extras){h+='<div class="dsec"><div class="sh">'+esc(d.extras.title||'תוספת לבחירה')+'</div><div class="sp">אפשר לבחור עד '+(d.extras.max||1)+' פריטים</div><div class="chips">'+
       d.extras.items.map(function(x){return chip('dishExtra',x.name,x.name+(x.price?' (+₪'+x.price+')':''),s.extras.indexOf(x.name)>=0,'extra:'+x.name);}).join('')+'</div></div>';}
-    if(d.changes&&d.changes.length){h+='<div class="dsec"><div class="sh">שינויים אפשריים במנה</div><div class="chips">'+
+    if(d.changes&&d.changes.length){h+='<div class="dsec'+T('secChanges')+'" data-target="secChanges"><div class="sh">שינויים אפשריים במנה</div><div class="chips">'+
       d.changes.map(function(x){return chip('dishChange',x,x,s.changes.indexOf(x)>=0,'change:'+x);}).join('')+'</div></div>';}
     (d.groups||[]).forEach(function(g,gi){var bad=miss.indexOf(g.title)>=0;
       h+='<div class="dsec'+(bad?' miss':'')+T('group:'+gi)+'" data-target="group:'+gi+'"><div class="sh">'+esc(g.title)+'</div><div class="sp">חובה לבחור '+(g.required||1)+'</div><div class="chips">'+
@@ -892,31 +905,37 @@ const menuData = extra => Object.assign({
 }, extra||{});
 
 /* ===== Fake practice data (fake customer / agent — not Kobbi) ===== */
-const SIM_DATA = menuData({ orderType:'delivery' });
+const SIM_DATA = menuData({ orderType:'delivery', deliveryFee:20 });   /* the system adds ₪20 automatically; the agent adds the rest manually */
 const BOX_ROLLS = ['קארי רול','אצה רול','סלמון גריל קראנץ׳','טמפורה רול','קליפורניה רול','rock and roll'];
 const inDish = (id,key) => s => s.dish&&s.dish.id===id ? key : 'dish:'+id;      /* pulse the window control, or the dish photo */
 const boxPicks = s => s.dish&&s.dish.id==='box' ? Object.values(s.dish.groups) : [];
+const BIZ = ['אדממה','קליפורניה רול','קוקה קולה'];   /* first course (illustrative list) · roll · drink (illustrative list) */
+const bizPicks = s => s.dish&&s.dish.id==='bizroll' ? s.dish.groups : {};
+const bizOk = s => BIZ.every((x,g)=>bizPicks(s)[g]===x);
+const KN = t => String(t||'').toUpperCase().replace(/\s+/g,' ');
+const noAvo = t => /בלי ?אבוקדו/.test(KN(t)) && /NO ?AVOCADO/.test(KN(t));
 const boxOk = s => { const p=boxPicks(s); return p.length===6 && BOX_ROLLS.every(r=>p.includes(r)); };
 
 const STATIONS = [
-  { id:'fee', title:'הוספת דמי משלוח ידנית',
+  { id:'fee', title:'דמי משלוח לישוב — ₪25',
     setup:s=>s.load({cart:[{name:'סלט אצה',price:51}],cat:'נישנושאצה',orderType:'delivery'}),
-    scenario:'כמו במקרה קימרון מהדרכה 7: משלוחה לא מזהה את הישוב. בפרטי הלקוח כבר הזנו את עיר הסניף, ובהערה את שם הישוב — בלי רחוב. דמי המשלוח לישוב: ₪5 — מוסיפים אותם ידנית.',
-    explain:'דמי משלוח ידניים מוסיפים בקטגוריה «שונות» ← «הוספת דמי משלוח»: בוחרים סכום ← «הוסף להזמנה».',
+    scenario:'משלוח לישוב (כמו קימרון): דמי המשלוח לשם ₪25. המערכת הוסיפה לבד ₪20 — חסרים ₪5.',
+    explain:'ראו בסיכום משמאל: «דמי משלוח ₪20». את ההפרש מוסיפים ב«שונות» ← «הוספת דמי משלוח».',
     steps:[
       { text:'פתחו את הקטגוריה «שונות»', target:'cat:שונות', match:(ev,c)=>ev==='category'&&c==='שונות' },
-      { text:'לחצו על התמונה של «הוספת דמי משלוח» — נפתח חלון המנה', target:'dish:fee', match:(ev,d)=>ev==='dishOpen'&&d.id==='fee' },
-      { text:'בחרו «דמי משלוח 5»', target:inDish('fee','fee:5'), match:(ev,n,d)=>ev==='dishFee'&&n===5 },
-      { text:'לחצו «הוסף להזמנה» — ובדקו בפירוט ההזמנה משמאל', target:inDish('fee','dishAdd'), match:(ev,l,d)=>ev==='dishAdd'&&d.id==='fee'&&l.price===5 }
+      { text:'לחצו על התמונה של «הוספת דמי משלוח»', target:'dish:fee', match:(ev,d)=>ev==='dishOpen'&&d.id==='fee' },
+      { text:'בחרו «דמי משלוח 5» (20 + 5 = 25)', target:inDish('fee','fee:5'), match:(ev,n,d)=>ev==='dishFee'&&n===5 },
+      { text:'לחצו «הוסף להזמנה»', target:inDish('fee','dishAdd'), match:(ev,l,d)=>ev==='dishAdd'&&d.id==='fee'&&l.price===5 }
     ],
-    wrong:[ { ev:'dishAdd', when:(i,l,d)=>d.id==='fee'&&l.price!==5, undo:true, goto:1, tip:'נכנס סכום לא נכון — דמי המשלוח לישוב הם ₪5. השורה הוסרה: פתחו שוב ובחרו «דמי משלוח 5».' } ],
+    wrong:[ { ev:'dishAdd', when:(i,l,d)=>d.id==='fee'&&l.price!==5, undo:true, goto:1, tip:'סכום לא נכון: ₪20 כבר במערכת, חסרים רק ₪5. השורה הוסרה — פתחו שוב ובחרו «דמי משלוח 5».' } ],
     hints:[
-      { ev:'dishFee', when:(i,n)=>n!==5, tip:'דמי המשלוח לישוב הם ₪5 — בחרו «דמי משלוח 5».' },
-      { ev:'dishAddFail', when:()=>true, tip:'קודם בוחרים את סכום דמי המשלוח.' },
+      { ev:'dishFee', when:(i,n)=>n===25, tip:'₪20 כבר נוספו אוטומטית — מוסיפים רק את ההפרש: ₪5.' },
+      { ev:'dishFee', when:(i,n)=>n!==5&&n!==25, tip:'₪25 פחות ₪20 שכבר במערכת = ₪5.' },
+      { ev:'dishAddFail', when:()=>true, tip:'קודם בוחרים סכום.' },
       { ev:'dishOpen', when:(i,d)=>d.id!=='fee', closeDish:true, tip:'מחפשים את «הוספת דמי משלוח» בקטגוריה «שונות».' },
       { ev:'dishClose', when:i=>i>=2, goto:1, tip:'החלון נסגר — פתחו שוב את «הוספת דמי משלוח».' }
     ],
-    done:'«הוספת דמי משלוח · דמי משלוח 5» נכנסה לפירוט ההזמנה ב־₪5.' },
+    done:'דמי משלוח: ₪20 אוטומטי + ₪5 ידני = ₪25.' },
 
   { id:'box', title:'מבצעים — מארז סושי בוקס',
     setup:s=>s.load({cart:[],cat:'שונות',orderType:'delivery'}),
@@ -939,48 +958,47 @@ const STATIONS = [
     ],
     done:'המארז (₪279) נכנס עם 6 הרולים שהלקוח ביקש. שימו לב: בחלון אין «שינויים אפשריים במנה».' },
 
-  { id:'nochange', type:'mc', title:'שינוי בעסקית / במארז', focus:[],
+  { id:'nochange', type:'mc', title:'עסקית — אין החלפות', focus:['cat:עסקיות'],
     setup:s=>s.load({cart:[],cat:'עסקיות',orderType:'delivery'}),
-    q:'הלקוח מזמין «עסקית רול מומלאצה» ומבקש: «את הרול בלי שומשום, בבקשה». מה עושים?',
+    q:'הלקוח מזמין עסקית מוקפץ: «במקום השתייה — עוד מנה ראשונה». מה עונים?',
     options:[
-      { t:'כותבים «בלי שומשום» בהערות למטבח — המטבח יסתדר' },
-      { t:'כותבים «בלי שומשום» בשדה «שם למנה»' },
-      { t:'מוסיפים את השינוי ומודיעים ללקוח שזה עולה ₪5 נוספים' },
-      { t:'מתנצלים ומסבירים שבעסקיות ובמבצעים אי אפשר לעשות שום שינוי — רק לבחור מהאפשרויות שבחלון', ok:true }
+      { t:'מתנצלים: בעסקיות ובמבצעים אין החלפות', ok:true },
+      { t:'מאשרים, וכותבים בהערות למטבח' },
+      { t:'מאשרים, בתוספת תשלום' },
+      { t:'מאשרים, וכותבים בשדה «שם למנה»' }
     ],
-    tipWrong:'פתחו את החלון של עסקית רול מומלאצה ובדקו: האם יש בו «שינויים אפשריים במנה»?' },
+    tipWrong:'בעסקיות ובמבצעים בוחרים רק מהאפשרויות שבחלון.' },
 
-  { id:'hours', type:'mc', title:'עסקיות — שעות', focus:[],
-    setup:s=>s.load({cart:[],cat:'עסקיות',orderType:'delivery'}),
-    q:'השעה 17:30. לקוח מבקש: «עסקית מוקפץ ב־62 ₪, כמו בפעם הקודמת». מה נכון?',
-    options:[
-      { t:'עסקיות זמינות כל היום — מזמינים לו' },
-      { t:'עסקיות זמינות רק בין 11:00 ל־16:00, ולא בכל הסניפים — עכשיו אי אפשר להזמין עסקית', ok:true },
-      { t:'עסקיות זמינות בין 12:00 ל־18:00 — הוא עוד בזמן' },
-      { t:'מזמינים לו עסקית וכותבים בהערות שההזמנה התקבלה לפני 16:00' }
-    ],
-    tipWrong:'הסתכלו בכותרת של קטגוריית «עסקיות» בסימולטור — מה כתוב מתחת לשם?' },
-
-  { id:'insist', title:'אין שינויים — והלקוח מתעקש',
+  { id:'remove', title:'רול מומלץ — «בלי אבוקדו»',
     setup:s=>s.load({cart:[],cat:'שונות',orderType:'delivery'}),
-    scenario:'הלקוח מזמין «עסקית רול מומלאצה» ומבקש: «בלי אבוקדו ברול».',
-    explain:'כלל לכל מנה: אם בחלון יש «שינויים אפשריים במנה» — אפשר רק אותם. אם לא כתוב — אין שינויים בכלל.',
+    scenario:'הלקוח: «עסקית רול מומלאצה — אדממה, קליפורניה רול וקוקה קולה. את הרול בלי אבוקדו».',
+    explain:'להוריד רכיב מרול מומלץ — תמיד אפשר. אם ההסרה לא מופיעה בחלון, כותבים בהערות למטבח: [[copy:בלי אבוקדו NO AVOCADO]]',
     steps:[
-      { text:'פתחו את הקטגוריה «עסקיות»', target:'cat:עסקיות', match:(ev,c)=>ev==='category'&&c==='עסקיות' },
-      { text:'לחצו על התמונה של «עסקית רול מומלאצה»', target:'dish:bizroll', match:(ev,d)=>ev==='dishOpen'&&d.id==='bizroll' },
-      { text:'בדקו בחלון: יש «שינויים אפשריים במנה»? אחר כך סגרו את החלון ב־✕ (בפינה השמאלית העליונה)', target:s=>s.dish?'dishClose':null, match:ev=>ev==='dishClose' }
+      { text:'פתחו את «עסקיות» ולחצו על התמונה של «עסקית רול מומלאצה»', target:'dish:bizroll', match:(ev,d)=>ev==='dishOpen'&&d.id==='bizroll' },
+      { text:'בחרו: אדממה · קליפורניה רול · קוקה קולה', ok:bizOk,
+        target:s=>{ if(!s.dish) return 'dish:bizroll'; const p=bizPicks(s); for(let g=0;g<3;g++) if(p[g]!==BIZ[g]) return 'group:'+g+':'+BIZ[g]; return 'dishKitchen'; } },
+      { text:'בהערות למטבח הדביקו «בלי אבוקדו NO AVOCADO»', target:inDish('bizroll','dishKitchen'), ok:s=>!!(s.dish&&s.dish.id==='bizroll'&&noAvo(s.dish.kitchen)) },
+      { text:'לחצו «הוסף להזמנה»', target:inDish('bizroll','dishAdd'), match:(ev,l,d)=>ev==='dishAdd'&&d.id==='bizroll'&&BIZ.every(x=>l.opts.includes(x))&&noAvo(l.note) }
     ],
-    hints:[ { ev:'dishOpen', when:(i,d)=>d.id!=='bizroll', closeDish:true, tip:'פתחו את «עסקית רול מומלאצה».' },
-            { ev:'dishAdd', when:()=>true, undo:true, tip:'עוד לא מוסיפים — קודם בודקים מה אפשר לשנות, וסוגרים ב־✕.' } ],
-    stepsDone:'✓ ראיתם: בחלון אין «שינויים אפשריים במנה» — אי אפשר לשנות.',
-    q:'הלקוח מתעקש: «אני רוצה בלי אבוקדו!». מה הסדר הנכון?',
+    wrong:[ { ev:'dishAdd', when:(i,l,d)=>d.id==='bizroll'&&!(BIZ.every(x=>l.opts.includes(x))&&noAvo(l.note)), undo:true, goto:0,
+              tip:'חסר משהו: אדממה, קליפורניה רול, קוקה קולה — ובהערות למטבח «בלי אבוקדו NO AVOCADO». המנה הוסרה, פתחו שוב.' } ],
+    hints:[
+      { ev:'dishGroup', when:(i,g,nm)=>!BIZ.includes(nm), tip:'הלקוח ביקש: אדממה · קליפורניה רול · קוקה קולה.' },
+      { ev:'dishAddFail', when:()=>true, tip:'בכל שדה «חובה לבחור» בוחרים לפי הלקוח: אדממה · קליפורניה רול · קוקה קולה.' },
+      { ev:'dishOpen', when:(i,d)=>d.id!=='bizroll', closeDish:true, tip:'פתחו את «עסקית רול מומלאצה» בקטגוריה «עסקיות».' },
+      { ev:'dishClose', when:i=>i>=1, goto:0, tip:'החלון נסגר והבחירות נמחקו — פתחו שוב.' }
+    ],
+    done:'הסרה מרול מומלץ — תמיד אפשר, בהערות למטבח (עברית + אנגלית).' },
+
+  { id:'replace', type:'mc', title:'רול מומלץ — «במקום…»', focus:[],
+    q:'הלקוח: «בקליפורניה רול — במקום אבוקדו, שימו בטטה». זה לא מופיע ב«שינויים אפשריים», והוא מתעקש. מה הסדר?',
     options:[
-      { b:['מתנצלים: במנה הזו אי אפשר לעשות שינויים','אם מתעקש — כותבים «בלי אבוקדו» בהערות למטבח','עדיין מתעקש — מבטיחים שהמטבח יסתדר'] },
-      { b:['מעבירים מיד למנהל משמרת','אם הוא לא זמין — בודקים בתיק הנציג','אחר כך מתנצלים בפני הלקוח'] },
-      { b:['מתנצלים: במנה הזו אי אפשר לעשות שינויים','אם מתעקש — מתקשרים לסניף','עדיין מתעקש — בודקים בתיק הנציג'] },
-      { b:['מתנצלים: במנה הזו אי אפשר לעשות שינויים','אם מתעקש — בודקים בתיק הנציג','עדיין מתעקש — שואלים מנהל משמרת או מתקשרים לסניף'], ok:true }
+      { b:['מתנצלים: אין החלפה כזו','תיק נציג','מנהל משמרת / הסניף'], ok:true },
+      { b:['כותבים בהערות למטבח','תיק נציג','מנהל משמרת / הסניף'] },
+      { b:['מתנצלים: אין החלפה כזו','מנהל משמרת / הסניף','תיק נציג'] },
+      { b:['מתנצלים: אין החלפה כזו','כותבים בהערות למטבח','מבטיחים שיסתדר'] }
     ],
-    tipWrong:'קודם מתנצלים. אחר כך: מה בודקים בעצמנו, ולמי פונים רק אם זה לא עוזר?' },
+    tipWrong:'להוריד — מותר. להחליף — רק אם מופיע בחלון. ואם מתעקש: מה בודקים קודם בעצמנו?' },
 
   /* quiz */
   { id:'q1', type:'mc', quiz:true, title:'הזמנה עתידית',
@@ -992,19 +1010,20 @@ const STATIONS = [
       { t:'לא כותבים — המטבח רואה לבד את שעת ההזמנה' }
     ],
     tipWrong:'המטבח מכין כל מנה לפי ההערות שלה. איפה הוא יראה את השעה?' },
-  { id:'q2', type:'mc', quiz:true, title:'אין «שינויים אפשריים»',
-    q:'בחלון של מנה לא כתוב «שינויים אפשריים במנה». מה זה אומר?',
+  { id:'q2', type:'mc', quiz:true, title:'עסקיות — שעות', focus:['cat:עסקיות'],
+    setup:s=>s.load({cart:[],cat:'עסקיות',orderType:'delivery'}),
+    q:'השעה 17:30, והלקוח רוצה עסקית. מה נכון?',
     options:[
-      { t:'אפשר כל שינוי — פשוט כותבים אותו בהערות למטבח' },
-      { t:'אפשר שינויים רק בתוספת תשלום' },
-      { t:'אי אפשר לעשות במנה שום שינוי', ok:true },
-      { t:'צריך להתקשר לסניף בכל הזמנה של המנה' }
+      { t:'עסקיות רק 11:00–16:00 — עכשיו אי אפשר', ok:true },
+      { t:'עסקיות כל היום — מזמינים' },
+      { t:'עסקיות עד 18:00 — עוד בזמן' },
+      { t:'מזמינים וכותבים «לפני 16:00»' }
     ],
-    tipWrong:'נזכרו בכלל: אם יש «שינויים אפשריים במנה» — רק אותם. ואם אין?' },
+    tipWrong:'הסתכלו מתחת לכותרת של קטגוריית «עסקיות».' },
   { id:'q3', type:'mc', quiz:true, title:'מארז סושי בוקס',
     q:'מה נכון לגבי «מארז סושי בוקס»?',
     options:[
-      { b:['₪279','6 רולים לבחירה מכל התפריט','אפשר שינויים דרך ההערות למטבח'] },
+      { b:['₪279','6 רולים לבחירה מכל התפריט','אי אפשר לעשות שינויים'] },
       { b:['₪279','6 רולים מקטגוריית «מומלאצה» — כל רול «חובה לבחור»','אי אפשר לעשות שינויים'], ok:true },
       { b:['₪229','6 רולים מקטגוריית «מומלאצה» — כל רול «חובה לבחור»','אי אפשר לעשות שינויים'] },
       { b:['₪279','4 רולים מקטגוריית «מומלאצה» — אפשר לדלג על רול','אי אפשר לעשות שינויים'] }
@@ -1014,6 +1033,7 @@ const STATIONS = [
 /* ===== Atza Academy · Mishloha lesson engine (lessons 10–11, from lesson 9) — shared by every orders-sim lesson =====
    Station types:
      mc     : {type:'mc', q, options:[{t|b:[bullets], ok}], tipWrong, focus:[targets], setup(sim)}
+     two-phase: action + {keyNote, qFocus, q, options, ansDone, afterLead, afterSteps:[…]} → steps, highlighted note + question, then more steps
      action : {scenario, explain, steps:[{text, target:key|fn(state)|[keys], match(ev,a,b) | ok(state)}], wrong[], hints[], done, setup(sim)}
               step.ok(state) = state predicate → the engine auto-advances over every consecutive satisfied step (order-free window steps)
               wrong/hints: {ev, when(stepIdx,a,b), tip, undo, reset, close, closeDish, fix(sim), goto:n}
@@ -1144,9 +1164,12 @@ function renderActive(){
   if(isMc){
     h+=mcHTML();
   }else{
+    const list=(arr,id,all)=>'<ol class="qsteps"'+(id?' id="'+id+'"':'')+'>'+arr.map(s=>'<li'+(all?' class="done"':'')+'>'+esc(s.text)+'</li>').join('')+'</ol>';
     h+='<div class="qscen">'+esc(st.scenario)+'</div>'+(st.explain?'<p class="qexpl">'+esc(st.explain)+'</p>':'')+
-      '<div class="qtask"><div class="qtask-h">מה עושים במסך ההזמנות:</div><ol class="qsteps" id="steps'+n+'">'+st.steps.map((s,i)=>'<li>'+esc(s.text)+'</li>').join('')+'</ol></div>';
-    if(st.options&&st._stepsDone) h+='<div class="qthen">'+(st.thenLead?'<div class="qthen-lead">'+esc(st.thenLead)+'</div>':'')+mcHTML()+'</div>';
+      '<div class="qtask"><div class="qtask-h">מה עושים במסך ההזמנות:</div>'+(st._phase2?list(st._steps1,'',true):list(st.steps,'steps'+n))+'</div>';
+    if(st.keyNote&&(st._stepsDone||st._phase2)) h+='<div class="qkey" role="note">'+esc(st.keyNote)+'</div>';
+    if(st.options&&st._stepsDone&&!st._phase2) h+='<div class="qthen">'+(st.thenLead?'<div class="qthen-lead">'+esc(st.thenLead)+'</div>':'')+mcHTML()+'</div>';
+    if(st._phase2) h+='<div class="qans">✓ '+esc(st._ans)+'</div><div class="qtask qtask2"><div class="qtask-h">'+esc(st.afterLead||'עכשיו במסך ההזמנות:')+'</div>'+list(st.steps,'steps'+n)+'</div>';
   }
   h+='<div class="feedback" id="fb'+n+'"></div></section>';
   slot.innerHTML=h; paintSteps();
@@ -1162,7 +1185,7 @@ function fb(kind,html){ const el=document.getElementById('fb'+current); if(!el) 
 function applyTargets(){
   const st=STATIONS[current-1];
   if(!st||passed[current]){ sim.setTargets([]); return; }
-  if(!st.steps||st._stepsDone){ sim.setTargets(sim.state.dish?['dishClose']:(st.focus||[])); return; }
+  if(!st.steps||st._stepsDone){ sim.setTargets(sim.state.dish?(st.qFocus||['dishClose']):(st.focus||[])); return; }   /* qFocus: what to read in the open window while answering */
   let t=st.steps[stepIdx].target; const v=sim.state.view, s=sim.state;
   if(typeof t==='function') t=t(s);
   if(s.dish&&!(Array.isArray(t)?t.length&&t.every(isDishKey):isDishKey(t))){ sim.setTargets(['dishClose']); return; }   /* dish window open, step is elsewhere → pulse ✕ */
@@ -1178,7 +1201,7 @@ function applyTargets(){
   sim.setTargets(t?[t]:[]);
 }
 /* dish-window keys and routing: a dish:<id>/add:<id> target in another category → pulse that category first */
-function isDishKey(t){ return !!t&&typeof t==='string'&&(['dishClose','dishQty','dishAdd','dishKitchen','dishName'].includes(t)||/^(extra|change|group|fee):/.test(t)); }
+function isDishKey(t){ return !!t&&typeof t==='string'&&(['dishClose','dishQty','dishAdd','dishKitchen','dishName','secChanges','dishDesc'].includes(t)||/^(extra|change|group|fee):/.test(t)); }
 function routeToDish(t,s){
   const one=k=>{ if(!k||typeof k!=='string') return k; const m=k.match(/^(dish|add):(.+)$/); if(!m) return k;
     const d=(SIM_DATA.dishes||[]).find(x=>x.id===m[2]); if(d&&!s.search&&s.view==='menu'&&d.cat!==s.cat) return 'cat:'+d.cat; return k; };
@@ -1190,7 +1213,7 @@ function autoAdvance(st){
   return moved;
 }
 function stepsComplete(st){
-  if(st.options){ st._stepsDone=true; renderActive(); fb('ok',esc(st.stepsDone||'✓ כל הצעדים בוצעו — עכשיו ענו על השאלה')); applyTargets(); fitSticky(); return; }
+  if(st.options&&!st._phase2){ st._stepsDone=true; renderActive(); fb('ok',esc(st.stepsDone||'✓ כל הצעדים בוצעו — עכשיו ענו על השאלה')); applyTargets(); fitSticky(); return; }
   pass(st.done);
 }
 function onSim(ev,payload,extra){
@@ -1235,6 +1258,10 @@ document.getElementById('activeSlot').addEventListener('click',e=>{
   const n=current, st=STATIONS[n-1]; if(passed[n]||AG.isLocked(n)||(st.steps&&!st._stepsDone)) return;
   AG.attempt(n);
   const opt=st.options[+b.dataset.o];
+  if(opt.ok&&st.afterSteps&&!st._phase2){   /* two-phase station: question answered → continue with more simulator steps */
+    st._phase2=true; st._ans=opt.t||(opt.b||[]).join(' · '); st._steps1=st.steps; st.steps=st.afterSteps; st._stepsDone=false; stepIdx=0;
+    renderActive(); fb('ok','✓ נכון!'+(st.ansDone?' <span style="font-weight:600">'+esc(st.ansDone)+'</span>':''));
+    if(autoAdvance(st)&&stepIdx>=st.steps.length){ stepsComplete(st); return; } paintSteps(); applyTargets(); fitSticky(); return; }
   if(opt.ok){ b.classList.add('opt-right'); document.querySelectorAll('#station'+n+' .opt-btn').forEach(x=>x.disabled=true); pass(''); }
   else{ b.classList.add('opt-wrong'); const locked=AG.wrong(n); if(!locked) fb('bad',esc(st.tipWrong)+' <button type="button" class="retry">נסה שוב</button>'); }
 });

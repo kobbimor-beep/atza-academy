@@ -407,6 +407,13 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 .osim-dwin .dd{white-space:pre-line}
 .osim-dwin .dsec.osim-pulse,.osim-dwin .dd.osim-pulse{border-radius:6px}
 
+/* v7.2 (Kobbi 21.10): selected choices = GREEN (correct), «חובה לבחור» = neutral orange; red only on a failed add (.miss/.derr) */
+.osim-chipb.on{border-color:#16a34a;box-shadow:inset 0 0 0 1px #16a34a;background:#e8f7ee;color:#166534;font-weight:700}
+.osim-fee.on{border-color:#16a34a;box-shadow:inset 0 0 0 1px #16a34a}
+.osim-fee.on span{background:#e8f7ee;color:#166534;font-weight:700}
+.osim-dwin .sp{color:#c2410c}
+.osim-dwin .dsec.miss .sp{color:#C81E1E}
+
 </style>
 </head>
 <body>
@@ -427,7 +434,7 @@ footer{margin:1rem 0 2rem;text-align:center;color:var(--muted);font-size:.8rem}
 <section class="card"><h2>לפני שמתחילים</h2>
 <ul class="intro-list">
 <li><strong>נישנושאצה = מנות ראשונות.</strong> בשמות הקטגוריות משלבים «אצה». כל מנה ראשונה נמצאת ב«נישנושאצה», ובכל מנה כתוב בדיוק מה יש בה.</li>
-<li><strong>קוראים את חלון המנה</strong> (לחיצה על התמונה): יש «שינויים אפשריים במנה»? אפשר רק אותם. לא כתוב? אין שינויים. למשל <strong>חמוצים יפניים ₪23</strong>: השינוי היחיד הוא «ללא שומשום».</li>
+<li><strong>קוראים את חלון המנה</strong> (לחיצה על התמונה) ובודקים ב«שינויים אפשריים במנה» מה אפשר. למשל <strong>חמוצים יפניים ₪23</strong>: השינוי היחיד הוא «ללא שומשום», ואי אפשר לבחור את הירקות (גם לא «בלי מלפפון»).</li>
 <li><strong>אגרול ירקות ₪31 = 2 יחידות במנה.</strong> לקוח שאומר «שני אגרול»? <strong>חובה לברר</strong>: מנה אחת (2 יח׳) או שתי מנות (4 יח׳).</li>
 <li><strong>מילים:</strong> טמפורה = בלילה (נשנושי עוף בטמפורה ₪44, דומה לשניצל). פנקו = פירורי לחם יפניים (כמו שניצל). יוזו = רוטב הדרים יפני, כמו אתרוג.</li>
 <li><strong>תוספת בחינם:</strong> ב«תוספת לבחירה», אם לא מופיע מחיר, התוספת בחינם. <strong>טום יאם ₪48</strong>: תוספת עוף / טופו / סלמון (עד 1, בחינם). השינויים: רק ללא פטריות / בצל ירוק / עגבניות שרי / נבטים סיניים. שום דבר אחר.</li>
@@ -943,7 +950,7 @@ const STATIONS = [
       { t:'מאשרים, וכותבים «בלי מלפפון» בשדה «שם למנה»' },
       { t:'מבטיחים שהמטבח ינסה להוריד את המלפפון' }
     ],
-    tipWrong:'מה כתוב בחלון תחת «שינויים אפשריים במנה»? רק מה שכתוב שם אפשר.',
+    tipWrong:'בחמוצים יפניים אי אפשר לבחור את הירקות. מה כתוב בחלון תחת «שינויים אפשריים במנה»?',
     ansDone:'מתעקש? בודקים בתיק נציג ← מנהל משמרת / הסניף.',
     afterLead:'הלקוח: «בסדר, אז בלי שומשום». מוסיפים את המנה:',
     afterSteps:[
